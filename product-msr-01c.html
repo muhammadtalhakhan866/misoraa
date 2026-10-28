@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Celestial Chronograph — Ref. MSR-01C | MISORAA</title>
+<meta name="description" content="The Celestial Chronograph by MISORAA: an automatic tri-register chronograph, 27 jewels, brushed obsidian dial, limited to 400 numbered pieces.">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/pages.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23000'/><text x='50' y='72' font-size='64' font-family='Georgia,serif' fill='%23D4AF62' text-anchor='middle'>M</text></svg>">
+</head>
+<body>
+<div id="sprite" aria-hidden="true"></div>
+<script src="assets/js/sprite.js"></script>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav scrolled" id="nav" data-nav="solid">
+  <div class="wrap">
+    <a href="index.html" class="nav-logo" aria-label="MISORAA home">
+      <svg viewBox="0 0 560 180"><use href="#logo-lockup"/></svg>
+    </a>
+    <nav>
+      <ul class="nav-menu">
+        <li><a href="index.html#collection">Collection</a></li>
+        <li><a href="product-msr-04s.html">Signature</a></li>
+        <li><a href="about.html">Craftsmanship</a></li>
+        <li><a href="about.html">Heritage</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <button class="icon-btn desk" aria-label="Search"><svg width="19" height="19"><use href="#i-search"/></svg></button>
+      <button class="icon-btn desk" aria-label="Account"><svg width="19" height="19"><use href="#i-user"/></svg></button>
+      <button class="icon-btn cart-dot" id="cartBtn" aria-label="Cart">
+        <svg width="19" height="19"><use href="#i-bag"/></svg><b id="cartCount">0</b>
+      </button>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html#collection">Collection</a>
+  <a href="product-msr-04s.html">Signature</a>
+  <a href="about.html">Craftsmanship</a>
+  <a href="about.html">Heritage</a>
+  <a href="index.html#contact">Contact</a>
+</div>
+
+<main>
+
+<!-- ============================ PRODUCT ============================ -->
+<section class="wrap pdp" style="padding-top:calc(var(--nav-h) + 48px)">
+
+  <!-- ---------- Gallery ---------- -->
+  <div class="pdp-gallery">
+    <div class="pdp-stage" id="stage">
+      <span class="corner tl"></span><span class="corner tr"></span>
+      <span class="corner bl"></span><span class="corner br"></span>
+      <span class="pdp-badge">400 Pieces Worldwide</span>
+      <svg viewBox="0 0 300 440" id="stageArt"><use href="#w-chrono" id="stageUse"/></svg>
+      <span class="pdp-note">Front · 41 mm</span>
+    </div>
+
+    <div class="pdp-thumbs" id="thumbs">
+      <button class="pdp-thumb active" data-art="w-chrono" data-view="Front · 41 mm" aria-label="Front view">
+        <svg viewBox="0 0 300 440"><use href="#w-chrono"/></svg>
+      </button>
+      <button class="pdp-thumb" data-art="w-classic" data-view="Noir Automatic" aria-label="Noir Automatic in this collection">
+        <svg viewBox="0 0 300 440"><use href="#w-classic"/></svg>
+      </button>
+      <button class="pdp-thumb" data-art="w-diver" data-view="Abyss Diver" aria-label="Abyss Diver in this collection">
+        <svg viewBox="0 0 300 440"><use href="#w-diver"/></svg>
+      </button>
+      <button class="pdp-thumb" data-art="w-skeleton" data-view="Aurum Skeleton" aria-label="Aurum Skeleton in this collection">
+        <svg viewBox="0 0 300 440"><use href="#w-skeleton"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ---------- Info ---------- -->
+  <div class="pdp-info">
+    <div class="crumbs">
+      <a href="index.html">Home</a> / <a href="index.html#collection">Collection</a> / <b>Celestial Chronograph</b>
+    </div>
+
+    <p class="pdp-ref">Ref. MSR–01C · Limited Edition</p>
+    <h1 class="pdp-title">Celestial <span class="gold-text">Chronograph</span></h1>
+
+    <div class="pdp-rating">
+      <span class="stars">★★★★★</span>
+      <span>4.9 — 64 owner reviews</span>
+    </div>
+
+    <div class="pdp-price">
+      <b class="gold-text" id="price">PKR 42,900</b>
+    </div>
+    <p class="pdp-vat">Inclusive of all taxes · Free insured delivery</p>
+
+    <p class="pdp-desc">A tri-register chronograph built around a column-wheel calibre, with the two counters set at three and nine and a running seconds at six. The dial is brushed obsidian, the indices applied gold-leaf, and the pushers are threaded rather than pressed in — so the action is firm and the case stays sealed. Four hundred pieces, each numbered on the caseback.</p>
+
+    <!-- Case finish -->
+    <div class="opt">
+      <div class="opt-label"><span>Case Finish</span><b id="finishName">Champagne Gold</b></div>
+      <div class="swatches" id="finishes">
+        <button class="swatch active" data-finish="none" data-name="Champagne Gold" aria-label="Champagne Gold">
+          <i style="background:linear-gradient(135deg,#8C6522,#FBF3DA 45%,#A2782F)"></i>
+        </button>
+        <button class="swatch" data-finish="grayscale(1) brightness(1.18)" data-name="Brushed Steel" aria-label="Brushed Steel">
+          <i style="background:linear-gradient(135deg,#6E6E72,#E4E4E8 45%,#86868B)"></i>
+        </button>
+        <button class="swatch" data-finish="hue-rotate(-22deg) saturate(1.3)" data-name="Rose Gold" aria-label="Rose Gold">
+          <i style="background:linear-gradient(135deg,#8C4A32,#F0C3AE 45%,#B5705A)"></i>
+        </button>
+        <button class="swatch" data-finish="brightness(.55) saturate(1.5)" data-name="Midnight PVD" aria-label="Midnight PVD">
+          <i style="background:linear-gradient(135deg,#1A1A1D,#4A4036 45%,#101012)"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Strap -->
+    <div class="opt">
+      <div class="opt-label"><span>Strap</span><b id="strapName">Obsidian Leather</b></div>
+      <div class="chips" id="straps">
+        <button class="chip active" data-name="Obsidian Leather">Obsidian Leather</button>
+        <button class="chip" data-name="Steel Bracelet">Steel Bracelet</button>
+        <button class="chip" data-name="Woven Rubber">Woven Rubber</button>
+      </div>
+    </div>
+
+    <!-- Size -->
+    <div class="opt">
+      <div class="opt-label"><span>Case Size</span><a href="index.html#contact" class="link-arrow" style="font-size:10px">Size Guide</a></div>
+      <div class="chips" id="sizes">
+        <button class="chip" data-name="38 mm" disabled>38 mm</button>
+        <button class="chip active" data-name="41 mm">41 mm</button>
+        <button class="chip" data-name="44 mm">44 mm</button>
+      </div>
+    </div>
+
+    <!-- Buy -->
+    <div class="buy-row">
+      <div class="qty">
+        <button type="button" id="qtyMinus" aria-label="Decrease quantity">−</button>
+        <span id="qtyVal">1</span>
+        <button type="button" id="qtyPlus" aria-label="Increase quantity">+</button>
+      </div>
+      <button class="btn btn--solid" id="addToBag"><span>Add to Bag</span></button>
+      <button class="btn" id="wishBtn"><span>Save</span></button>
+    </div>
+
+    <p class="stock"><i></i> In stock — 31 of 400 remaining · ships within 48 hours</p>
+
+    <div class="trust">
+      <div>
+        <svg width="24" height="24"><use href="#i-shield"/></svg>
+        <b>18 Months</b><span>Warranty</span>
+      </div>
+      <div>
+        <svg width="24" height="24"><use href="#i-diamond"/></svg>
+        <b>Numbered</b><span>Certificate</span>
+      </div>
+      <div>
+        <svg width="24" height="24"><use href="#i-water"/></svg>
+        <b>50 Metres</b><span>Water Resistant</span>
+      </div>
+    </div>
+
+    <!-- Accordion -->
+    <div class="acc" id="acc">
+      <div class="acc-item open">
+        <button class="acc-head" type="button">Technical Specification <i></i></button>
+        <div class="acc-body">
+          <div class="acc-inner">
+            <ul class="spec-list">
+              <li><span>Movement</span><b>Automatic Chronograph · 27 Jewels</b></li>
+              <li><span>Counters</span><b>30-minute · 12-hour · Small seconds</b></li>
+              <li><span>Case</span><b>41 mm · 316L Steel</b></li>
+              <li><span>Thickness</span><b>13.4 mm</b></li>
+              <li><span>Crystal</span><b>Flat Sapphire, AR-coated</b></li>
+              <li><span>Caseback</span><b>Solid steel, engraved and numbered</b></li>
+              <li><span>Power Reserve</span><b>48 Hours</b></li>
+              <li><span>Lug Width</span><b>20 mm · Quick-release</b></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-head" type="button">The Chronograph <i></i></button>
+        <div class="acc-body">
+          <div class="acc-inner">
+            <p>The chronograph is driven by a column wheel rather than a cam, which is why the pusher moves cleanly and the seconds hand starts without a jump. Resetting returns all three hands to zero in one stroke. The mechanism is regulated in five positions and timed over eight days with the chronograph both idle and running, because a running chronograph draws on the same mainspring.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-head" type="button">Shipping &amp; Returns <i></i></button>
+        <div class="acc-body">
+          <div class="acc-inner">
+            <p>Insured delivery is free worldwide and ships within 48 hours. Every piece travels in a sealed presentation case with its certificate. If it is not right, return it unworn within 30 days for a full refund — we cover the return shipping.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="acc-item">
+        <button class="acc-head" type="button">Warranty &amp; Servicing <i></i></button>
+        <div class="acc-body">
+          <div class="acc-inner">
+            <p>Eighteen months international warranty against any fault in the movement or finish. After that, servicing is offered at cost for the life of the watch — send it to the atelier and it comes back regulated, resealed and pressure-tested.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RELATED ============================ -->
+<section class="section related" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <p class="eyebrow center">Also Considered</p>
+      <h2 class="section-title">Complete the <span class="gold-text">Collection</span></h2>
+    </div>
+
+    <div class="grid">
+      <article class="card reveal">
+        <div class="card-media">
+          <span class="card-tag">Bestseller</span>
+          <button class="card-fav" aria-label="Save"><svg width="17" height="17"><use href="#i-heart"/></svg></button>
+          <svg viewBox="0 0 300 440"><use href="#w-classic"/></svg>
+          <div class="card-quick"><button data-add="Noir Automatic">Add to Bag</button></div>
+        </div>
+        <div class="card-body">
+          <p class="card-ref">Ref. MSR–02A</p>
+          <h3 class="card-name"><a href="product-msr-02a.html">Noir Automatic</a></h3>
+          <p class="card-desc">The house classic. Self-winding, 40-hour reserve, date at three.</p>
+          <div class="card-foot">
+            <span class="card-price gold-text">PKR 34,500</span>
+            <span class="stars">★★★★★</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-media">
+          <span class="card-tag">300M</span>
+          <button class="card-fav" aria-label="Save"><svg width="17" height="17"><use href="#i-heart"/></svg></button>
+          <svg viewBox="0 0 300 440"><use href="#w-diver"/></svg>
+          <div class="card-quick"><button data-add="Abyss Diver">Add to Bag</button></div>
+        </div>
+        <div class="card-body">
+          <p class="card-ref">Ref. MSR–03D</p>
+          <h3 class="card-name"><a href="product-msr-03d.html">Abyss Diver</a></h3>
+          <p class="card-desc">Unidirectional gold bezel, luminous markers, screw-down crown.</p>
+          <div class="card-foot">
+            <span class="card-price gold-text">PKR 48,200</span>
+            <span class="stars">★★★★☆</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal">
+        <div class="card-media">
+          <span class="card-tag">250 Pieces</span>
+          <button class="card-fav" aria-label="Save"><svg width="17" height="17"><use href="#i-heart"/></svg></button>
+          <svg viewBox="0 0 300 440"><use href="#w-skeleton"/></svg>
+          <div class="card-quick"><button data-add="Aurum Skeleton">Add to Bag</button></div>
+        </div>
+        <div class="card-body">
+          <p class="card-ref">Ref. MSR–04S</p>
+          <h3 class="card-name"><a href="product-msr-04s.html">Aurum Skeleton</a></h3>
+          <p class="card-desc">An open-worked movement, gold bridges exposed on both sides.</p>
+          <div class="card-foot">
+            <span class="card-price gold-text">PKR 69,900</span>
+            <span class="stars">★★★★★</span>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <svg viewBox="0 0 380 320"><use href="#logo-stack"/></svg>
+        <p>Premium timepieces for those who measure life in moments, not minutes. Designed in-house, assembled by hand, numbered for life.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><svg width="17" height="17"><use href="#i-ig"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="17" height="17"><use href="#i-fb"/></svg></a>
+          <a href="#" aria-label="X"><svg width="15" height="15"><use href="#i-x"/></svg></a>
+          <a href="#" aria-label="WhatsApp"><svg width="17" height="17"><use href="#i-wa"/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Collection</h4>
+        <ul>
+          <li><a href="index.html#collection">Automatic</a></li>
+          <li><a href="index.html#collection">Chronograph</a></li>
+          <li><a href="index.html#collection">Diver</a></li>
+          <li><a href="product-msr-04s.html">Limited Editions</a></li>
+          <li><a href="index.html#contact">Gift Cards</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Maison</h4>
+        <ul>
+          <li><a href="about.html">Our Heritage</a></li>
+          <li><a href="about.html#craft">Craftsmanship</a></li>
+          <li><a href="product-msr-04s.html">The Signature</a></li>
+          <li><a href="about.html#team">The Atelier</a></li>
+          <li><a href="index.html#contact">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Client Care</h4>
+        <ul>
+          <li><a href="index.html#contact">Shipping &amp; Returns</a></li>
+          <li><a href="index.html#contact">Warranty &amp; Servicing</a></li>
+          <li><a href="index.html#contact">Size &amp; Fit Guide</a></li>
+          <li><a href="index.html#contact">Authenticity Check</a></li>
+          <li><a href="index.html#contact">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bot">
+      <span>© <span id="year">2026</span> MISORAA. All rights reserved.</span>
+      <nav><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></nav>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>

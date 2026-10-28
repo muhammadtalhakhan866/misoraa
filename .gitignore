@@ -1,0 +1,18 @@
+# OS cruft
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Local agent/editor settings (launch.json is kept — it is useful to share)
+.claude/settings.local.json
+
+# Node
+node_modules/
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+
+# Vercel link metadata
+.vercel

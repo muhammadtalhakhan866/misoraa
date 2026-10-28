@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MISORAA — Timeless Elegance | Luxury Watches</title>
+<meta name="description" content="MISORAA crafts premium timepieces where Swiss-grade precision meets understated gold-on-black elegance. Explore the automatic, chronograph and diver collections.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="MISORAA — Timeless Elegance">
+<meta property="og:description" content="Premium timepieces. Crafted for those who measure life in moments, not minutes.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23000'/><text x='50' y='72' font-size='64' font-family='Georgia,serif' fill='%23D4AF62' text-anchor='middle'>M</text></svg>">
+</head>
+<body>
+<div id="sprite" aria-hidden="true"></div>
+<script src="assets/js/sprite.js"></script>
+
+<!-- ============================ PRELOADER ============================ -->
+<div id="loader">
+  <div>
+    <svg class="loader-mark" viewBox="0 0 380 320"><use href="#logo-stack"/></svg>
+    <div class="loader-bar"><i></i></div>
+  </div>
+</div>
+
+<!-- ============================ NAV ============================ -->
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a href="#top" class="nav-logo" aria-label="MISORAA home">
+      <svg viewBox="0 0 560 180"><use href="#logo-lockup"/></svg>
+    </a>
+
+    <nav>
+      <ul class="nav-menu">
+        <li><a href="#collection">Collection</a></li>
+        <li><a href="product-msr-04s.html">Signature</a></li>
+        <li><a href="about.html#craft">Craftsmanship</a></li>
+        <li><a href="about.html#heritage">Heritage</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="icon-btn desk" aria-label="Search"><svg width="19" height="19"><use href="#i-search"/></svg></button>
+      <button class="icon-btn desk" aria-label="Account"><svg width="19" height="19"><use href="#i-user"/></svg></button>
+      <button class="icon-btn cart-dot" id="cartBtn" aria-label="Cart">
+        <svg width="19" height="19"><use href="#i-bag"/></svg><b id="cartCount">0</b>
+      </button>
+      <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#collection">Collection</a>
+  <a href="product-msr-04s.html">Signature</a>
+  <a href="about.html#craft">Craftsmanship</a>
+  <a href="about.html#heritage">Heritage</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<main id="top">
+
+<!-- ============================ HERO ============================ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="eyebrow">Est. 2019 · Fine Watchmaking</p>
+      <h1>Time, <span class="gold-text">Refined</span><em class="gold-text">Beyond Trend</em></h1>
+      <p>Every MISORAA begins as a sketch and ends as an heirloom — sapphire crystal, hand-finished movements and a gold-on-obsidian signature that never asks for attention, yet always receives it.</p>
+      <div class="hero-cta">
+        <a href="#collection" class="btn btn--solid"><span>Explore Collection</span></a>
+        <a href="product-msr-04s.html" class="btn btn--ghost"><span>The Signature</span></a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b class="gold-text" data-count="18">0</b><span>Months Warranty</span></div>
+        <div class="stat"><b class="gold-text" data-count="42">0</b><span>Hand Assembly Steps</span></div>
+        <div class="stat"><b class="gold-text" data-count="75" data-suffix="K+">0</b><span>Collectors Worldwide</span></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-glow"></div>
+      <div class="hero-ring r1"></div>
+      <div class="hero-ring r2"></div>
+      <div class="hero-watch" id="heroArt">
+        <svg viewBox="0 0 300 440" id="heroSvg"><use href="#w-chrono"/></svg>
+        <!-- The first 2s of the product clip, looped — past that the camera pushes
+             into the dial. The circular crop lives in .hero-watch.has-video in
+             style.css; the SVG above is the fallback. -->
+        <video id="heroVideo" src="assets/video/hero-watch.mp4#t=0,2"
+               muted playsinline autoplay preload="auto"
+               aria-label="MISORAA chronograph, rotating" hidden></video>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-cue"><span>Scroll</span><i></i></div>
+</section>
+
+<!-- ============================ MARQUEE ============================ -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="marquee-item">Sapphire Crystal</span>
+    <span class="marquee-item">Swiss-Grade Movement</span>
+    <span class="marquee-item">316L Surgical Steel</span>
+    <span class="marquee-item">18K Gold Plating</span>
+    <span class="marquee-item">Timeless Elegance</span>
+    <span class="marquee-item">Sapphire Crystal</span>
+    <span class="marquee-item">Swiss-Grade Movement</span>
+    <span class="marquee-item">316L Surgical Steel</span>
+    <span class="marquee-item">18K Gold Plating</span>
+    <span class="marquee-item">Timeless Elegance</span>
+  </div>
+</div>
+
+<!-- ============================ COLLECTION ============================ -->
+<section class="section" id="collection">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <p class="eyebrow center">The Collection</p>
+      <h2 class="section-title">Six Movements.<br>One <span class="gold-text">Philosophy</span>.</h2>
+      <p class="section-sub">Each reference is produced in a limited run, numbered on the caseback and finished by a single watchmaker from first screw to final polish.</p>
+    </div>
+
+    <div class="filters reveal">
+      <button class="filter active" data-filter="all">All Pieces</button>
+      <button class="filter" data-filter="automatic">Automatic</button>
+      <button class="filter" data-filter="chronograph">Chronograph</button>
+      <button class="filter" data-filter="diver">Diver</button>
+      <button class="filter" data-filter="limited">Limited</button>
+    </div>
+
+    <div class="grid" id="grid">
+
+      <article class="card reveal" data-cat="chronograph limited">
+        <div class="card-media">
+          <span class="card-tag new">New Release</span>
+          <button class="card-fav" aria-label="Save"><svg width="17" height="17"><use href="#i-heart"/></svg></button>
+          <svg viewBox="0 0 300 440"><use href="#w-chrono"/></svg>
+          <div class="card-quick"><button data-add="Celestial Chronograph">Add to Bag</button></div>
+        </div>
+        <div class="card-body">
+          <p class="card-ref">Ref. MSR–01C</p>
+          <h3 class="card-name"><a href="product-msr-01c.html">Celestial Chronograph</a></h3>
+          <p class="card-desc">Tri-register chronograph with a brushed obsidian dial and gold-leaf indices.</p>
+          <div class="card-foot">
+            <span class="card-price gold-text">PKR 42,900</span>
+            <span class="stars">★★★★★</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal" data-cat="automatic">
+        <div class="card-media">
+          <span class="card-tag">Bestseller</span>
+          <button class="card-fav" aria-label="Save"><svg width="17" height="17"><use href="#i-heart"/></svg></button>
+          <svg viewBox="0 0 300 440"><use href="#w-classic"/></svg>
+          <div class="card-quick"><button data-add="Noir Automatic">Add to Bag</button></div>
+        </div>
+        <div class="card-body">
+          <p class="card-ref">Ref. MSR–02A</p>
+          <h3 class="card-name"><a href="product-msr-02a.html">Noir Automatic</a></h3>
+          <p class="card-desc">The house classic. Self-winding, 40-hour reserve, date at three.</p>
+          <div class="card-foot">
+            <span class="card-price gold-text">PKR 34,500</span>
+            <span class="stars">★★★★★</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal" data-cat="diver automatic">
+        <div class="card-media">
+          <span class="card-tag">300M</span>
+          <button class="card-fav" aria-label="Save"><svg width="17" height="17"><use href="#i-heart"/></svg></button>
+          <svg viewBox="0 0 300 440"><use href="#w-diver"/></svg>
+          <div class="card-quick"><button data-add="Abyss Diver 300M">Add to Bag</button></div>
+        </div>
+        <div class="card-body">
+          <p class="card-ref">Ref. MSR–03D</p>
+          <h3 class="card-name"><a href="product-msr-03d.html">Abyss Diver</a></h3>
+          <p class="card-desc">Unidirectional gold bezel, luminous markers, screw-down crown.</p>
+          <div class="card-foot">
+            <span class="card-price gold-text">PKR 48,200</span>
+            <span class="stars">★★★★☆</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal" data-cat="automatic limited">
+        <div class="card-media">
+          <span class="card-tag">250 Pieces</span>
+          <button class="card-fav" aria-label="Save"><svg width="17" height="17"><use href="#i-heart"/></svg></button>
+          <svg viewBox="0 0 300 440"><use href="#w-skeleton"/></svg>
+          <div class="card-quick"><button data-add="Aurum Skeleton">Add to Bag</button></div>
+        </div>
+        <div class="card-body">
+          <p class="card-ref">Ref. MSR–04S</p>
+          <h3 class="card-name"><a href="product-msr-04s.html">Aurum Skeleton</a></h3>
+          <p class="card-desc">An open-worked movement, gold bridges exposed on both sides.</p>
+          <div class="card-foot">
+            <span class="card-price gold-text">PKR 69,900</span>
+            <span class="stars">★★★★★</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal" data-cat="automatic">
+        <div class="card-media">
+          <span class="card-tag">Dress</span>
+          <button class="card-fav" aria-label="Save"><svg width="17" height="17"><use href="#i-heart"/></svg></button>
+          <svg viewBox="0 0 300 440"><use href="#w-tonneau"/></svg>
+          <div class="card-quick"><button data-add="Monarch Tonneau">Add to Bag</button></div>
+        </div>
+        <div class="card-body">
+          <p class="card-ref">Ref. MSR–05T</p>
+          <h3 class="card-name"><a href="product-msr-05t.html">Monarch Tonneau</a></h3>
+          <p class="card-desc">A cushion case cut for the cuff — 8.4 mm slim, grained black dial.</p>
+          <div class="card-foot">
+            <span class="card-price gold-text">PKR 38,700</span>
+            <span class="stars">★★★★☆</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="card reveal" data-cat="chronograph limited">
+        <div class="card-media">
+          <span class="card-tag new">Moonphase</span>
+          <button class="card-fav" aria-label="Save"><svg width="17" height="17"><use href="#i-heart"/></svg></button>
+          <svg viewBox="0 0 300 440"><use href="#w-moon"/></svg>
+          <div class="card-quick"><button data-add="Lunaire Moonphase">Add to Bag</button></div>
+        </div>
+        <div class="card-body">
+          <p class="card-ref">Ref. MSR–06M</p>
+          <h3 class="card-name"><a href="product-msr-06m.html">Lunaire Moonphase</a></h3>
+          <p class="card-desc">A hand-engraved moon disc, accurate to one day in 122 years.</p>
+          <div class="card-foot">
+            <span class="card-price gold-text">PKR 58,400</span>
+            <span class="stars">★★★★★</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================ SIGNATURE PIECE ============================ -->
+<section class="section" id="signature" style="padding-top:0">
+  <div class="wrap">
+    <div class="split reveal">
+      <div class="split-visual">
+        <span class="corner tl"></span><span class="corner tr"></span>
+        <span class="corner bl"></span><span class="corner br"></span>
+        <svg viewBox="0 0 300 440"><use href="#w-skeleton"/></svg>
+      </div>
+      <div>
+        <p class="eyebrow">The Signature Piece</p>
+        <h2 class="section-title">Aurum <span class="gold-text">Skeleton</span></h2>
+        <p class="section-sub">Two hundred and fifty pieces. Sapphire front and back, so the calibre is never hidden — 142 components, 21 jewels, finished with Geneva stripes and gold-anodised bridges that echo the house mark.</p>
+        <ul class="spec-list">
+          <li><span>Movement</span><b>Automatic · 21 Jewels</b></li>
+          <li><span>Case</span><b>42 mm · 316L Steel</b></li>
+          <li><span>Crystal</span><b>Domed Sapphire</b></li>
+          <li><span>Reserve</span><b>42 Hours</b></li>
+          <li><span>Water Resistance</span><b>50 Metres</b></li>
+        </ul>
+        <a href="product-msr-04s.html" class="btn btn--solid"><span>View The Piece</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CRAFT ============================ -->
+<section class="section" id="craft" style="padding-top:0">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <p class="eyebrow center">Craftsmanship</p>
+      <h2 class="section-title">What Goes In,<br>Before It Goes <span class="gold-text">On</span>.</h2>
+    </div>
+
+    <div class="pillars reveal">
+      <div class="pillar">
+        <p class="pillar-no">01</p>
+        <div class="pillar-ico"><svg width="30" height="30"><use href="#i-gear"/></svg></div>
+        <h3>The Calibre</h3>
+        <p>Swiss-grade automatic movements, regulated in five positions and tested over 14 days before a case ever closes around them.</p>
+      </div>
+      <div class="pillar">
+        <p class="pillar-no">02</p>
+        <div class="pillar-ico"><svg width="30" height="30"><use href="#i-diamond"/></svg></div>
+        <h3>The Finish</h3>
+        <p>18K gold PVD over surgical steel, applied in six passes — a finish measured in microns, not marketing claims.</p>
+      </div>
+      <div class="pillar">
+        <p class="pillar-no">03</p>
+        <div class="pillar-ico"><svg width="30" height="30"><use href="#i-water"/></svg></div>
+        <h3>The Seal</h3>
+        <p>Every case is pressure-tested individually. Screw-down crowns, triple gaskets, and a caseback torqued to spec by hand.</p>
+      </div>
+      <div class="pillar">
+        <p class="pillar-no">04</p>
+        <div class="pillar-ico"><svg width="30" height="30"><use href="#i-shield"/></svg></div>
+        <h3>The Promise</h3>
+        <p>An 18-month international warranty, lifetime servicing at cost, and a certificate numbered to your piece alone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ HERITAGE ============================ -->
+<section class="heritage" id="heritage">
+  <div class="wrap reveal">
+    <p class="eyebrow center">Our Heritage</p>
+    <blockquote>“A watch should outlive the trend that sold it — and quietly outlast the one that follows.”</blockquote>
+    <cite>— The MISORAA Atelier</cite>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <p class="tl-year gold-text">2019</p>
+        <p>Founded around a single idea: gold on black, nothing superfluous. Forty pieces, one bench.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year gold-text">2021</p>
+        <p>The Noir Automatic arrives and sells through in nine days. The waitlist becomes the business.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year gold-text">2023</p>
+        <p>In-house finishing workshop opens; the first skeletonised calibre leaves the atelier.</p>
+      </div>
+      <div class="tl-item">
+        <p class="tl-year gold-text">2026</p>
+        <p>Seventy-five thousand collectors across 31 countries wear the mark.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ TESTIMONIALS ============================ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <p class="eyebrow center">Owners</p>
+      <h2 class="section-title">Worn, Not <span class="gold-text">Displayed</span>.</h2>
+    </div>
+
+    <div class="quotes">
+      <div class="quote reveal">
+        <div class="stars">★★★★★</div>
+        <p>“The weight is the first thing you notice. The second is that nobody can tell you what it cost — which is exactly the point.”</p>
+        <div class="quote-by">
+          <div class="avatar">A</div>
+          <div><b>Ahmed Raza</b><span>Karachi</span></div>
+        </div>
+      </div>
+      <div class="quote reveal">
+        <div class="stars">★★★★★</div>
+        <p>“Two years on the Noir, daily, no service. The gold has not dulled a shade. That alone says enough.”</p>
+        <div class="quote-by">
+          <div class="avatar">S</div>
+          <div><b>Sara Mahmood</b><span>Dubai</span></div>
+        </div>
+      </div>
+      <div class="quote reveal">
+        <div class="stars">★★★★★</div>
+        <p>“I bought the Skeleton for the movement and kept it for the proportions. It reads elegant before it reads expensive.”</p>
+        <div class="quote-by">
+          <div class="avatar">D</div>
+          <div><b>Daniyal Khan</b><span>London</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ NEWSLETTER ============================ -->
+<section class="news" id="contact">
+  <div class="wrap reveal">
+    <p class="eyebrow center">The Inner Circle</p>
+    <h2 class="section-title">First Access.<br>Before <span class="gold-text">Anyone</span>.</h2>
+    <p class="section-sub" style="margin:0 auto">Limited references are released to the list first. No noise — a handful of letters a year.</p>
+    <form class="news-form" id="newsForm" novalidate>
+      <input type="email" id="newsEmail" placeholder="your@email.com" aria-label="Email address" required>
+      <button type="submit">Join</button>
+    </form>
+    <p class="news-msg" id="newsMsg" role="status"></p>
+    <small>We keep your address to ourselves. Unsubscribe in one click.</small>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================ FOOTER ============================ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <svg viewBox="0 0 380 320"><use href="#logo-stack"/></svg>
+        <p>Premium timepieces for those who measure life in moments, not minutes. Designed in-house, assembled by hand, numbered for life.</p>
+        <div class="socials">
+          <a href="#" aria-label="Instagram"><svg width="17" height="17"><use href="#i-ig"/></svg></a>
+          <a href="#" aria-label="Facebook"><svg width="17" height="17"><use href="#i-fb"/></svg></a>
+          <a href="#" aria-label="X"><svg width="15" height="15"><use href="#i-x"/></svg></a>
+          <a href="#" aria-label="WhatsApp"><svg width="17" height="17"><use href="#i-wa"/></svg></a>
+        </div>
+      </div>
+
+      <div>
+        <h4>Collection</h4>
+        <ul>
+          <li><a href="#collection">Automatic</a></li>
+          <li><a href="#collection">Chronograph</a></li>
+          <li><a href="#collection">Diver</a></li>
+          <li><a href="product-msr-04s.html">Limited Editions</a></li>
+          <li><a href="#collection">Gift Cards</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Maison</h4>
+        <ul>
+          <li><a href="about.html#heritage">Our Heritage</a></li>
+          <li><a href="about.html#craft">Craftsmanship</a></li>
+          <li><a href="product-msr-04s.html">The Signature</a></li>
+          <li><a href="about.html#team">The Atelier</a></li>
+          <li><a href="#contact">Careers</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4>Client Care</h4>
+        <ul>
+          <li><a href="#contact">Shipping &amp; Returns</a></li>
+          <li><a href="#contact">Warranty &amp; Servicing</a></li>
+          <li><a href="#contact">Size &amp; Fit Guide</a></li>
+          <li><a href="#contact">Authenticity Check</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bot">
+      <span>© <span id="year">2026</span> MISORAA. All rights reserved.</span>
+      <nav>
+        <a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
