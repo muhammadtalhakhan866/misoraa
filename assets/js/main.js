@@ -61,6 +61,10 @@
       });
     }, { threshold: 0.12, rootMargin: '0px 0px -60px' });
     reveals.forEach(function (el) { io.observe(el); });
+    // Cards and sections that catalog.js builds after the data arrives join the same reveal.
+    window.MisoraaReveal = function (nodes) {
+      Array.prototype.forEach.call(nodes, function (n) { io.observe(n); });
+    };
 
     // A hash jump lands past several sections before the observer has reported
     // on them, so sweep anything at or above the fold once the page settles.
@@ -77,6 +81,9 @@
     window.addEventListener('scroll', sweep, { passive: true });
   } else {
     reveals.forEach(function (el) { el.classList.add('in'); });
+    window.MisoraaReveal = function (nodes) {
+      Array.prototype.forEach.call(nodes, function (n) { n.classList.add('in'); });
+    };
   }
 
   /* ---------- Stat counters ---------- */
@@ -107,21 +114,6 @@
     });
   }
 
-  /* ---------- Collection filter ---------- */
-  var cards = $$('#grid .card');
-  $$('.filter').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      $$('.filter').forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
-      var f = btn.getAttribute('data-filter');
-      cards.forEach(function (card) {
-        var match = f === 'all' || (card.getAttribute('data-cat') || '').indexOf(f) > -1;
-        card.classList.toggle('hide', !match);
-        if (match) card.classList.add('in');
-      });
-    });
-  });
-
   /* ---------- Toast ---------- */
   var toast = $('#toast');
   var toastTimer;
@@ -132,32 +124,6 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 2800);
   };
-
-  /* ---------- Cart ---------- */
-  var count = 0;
-  var badge = $('#cartCount');
-  $$('[data-add]').forEach(function (btn) {
-    btn.addEventListener('click', function () {
-      count += 1;
-      if (badge) badge.textContent = String(count);
-      say(btn.getAttribute('data-add') + ' added to bag');
-    });
-  });
-  var cartBtn = $('#cartBtn');
-  if (cartBtn) {
-    cartBtn.addEventListener('click', function () {
-      say(count ? count + ' piece(s) reserved in your bag' : 'Your bag is empty');
-    });
-  }
-
-  /* ---------- Wishlist ---------- */
-  $$('.card-fav').forEach(function (btn) {
-    btn.addEventListener('click', function (e) {
-      e.preventDefault();
-      var on = btn.classList.toggle('on');
-      say(on ? 'Saved to your wishlist' : 'Removed from wishlist');
-    });
-  });
 
   /* ---------- Newsletter ---------- */
   var form = $('#newsForm');
@@ -181,119 +147,6 @@
     });
   }
 
-  /* ======================================================================
-     PRODUCT DETAIL PAGE
-     Every block below no-ops on pages that do not have these elements.
-     ====================================================================== */
-
-  /* ---------- Gallery: thumbnails swap the stage artwork ---------- */
-  var stage    = $('#stage');
-  var stageUse = $('#stageUse');
-  var stageNote = stage ? $('.pdp-note', stage) : null;
-  $$('#thumbs .pdp-thumb').forEach(function (thumb) {
-    thumb.addEventListener('click', function () {
-      if (thumb.classList.contains('active')) return;
-      $$('#thumbs .pdp-thumb').forEach(function (t) { t.classList.remove('active'); });
-      thumb.classList.add('active');
-      stage.classList.add('swapping');
-      setTimeout(function () {
-        stageUse.setAttribute('href', '#' + thumb.getAttribute('data-art'));
-        if (stageNote) stageNote.textContent = thumb.getAttribute('data-view');
-        stage.classList.remove('swapping');
-      }, 320);
-    });
-  });
-
-  /* ---------- Case finish: recolours the artwork ---------- */
-  var stageArt = $('#stageArt');
-  $$('#finishes .swatch').forEach(function (sw) {
-    sw.addEventListener('click', function () {
-      $$('#finishes .swatch').forEach(function (s) { s.classList.remove('active'); });
-      sw.classList.add('active');
-      var f = sw.getAttribute('data-finish');
-      if (stageArt) stageArt.style.filter = f === 'none' ? '' : f;
-      var label = $('#finishName');
-      if (label) label.textContent = sw.getAttribute('data-name');
-    });
-  });
-
-  /* ---------- Strap / size chip groups ---------- */
-  var chipGroup = function (groupId, labelId) {
-    var group = $(groupId);
-    if (!group) return;
-    $$('.chip', group).forEach(function (chip) {
-      chip.addEventListener('click', function () {
-        if (chip.disabled) return;
-        $$('.chip', group).forEach(function (c) { c.classList.remove('active'); });
-        chip.classList.add('active');
-        var label = labelId && $(labelId);
-        if (label) label.textContent = chip.getAttribute('data-name');
-      });
-    });
-  };
-  chipGroup('#straps', '#strapName');
-  chipGroup('#sizes', null);
-
-  /* ---------- Quantity ---------- */
-  var qtyVal = $('#qtyVal');
-  var qty = 1;
-  var setQty = function (n) {
-    qty = Math.min(5, Math.max(1, n));
-    if (qtyVal) qtyVal.textContent = String(qty);
-  };
-  if ($('#qtyMinus')) $('#qtyMinus').addEventListener('click', function () { setQty(qty - 1); });
-  if ($('#qtyPlus')) $('#qtyPlus').addEventListener('click', function () { setQty(qty + 1); });
-
-  /* ---------- Add to bag / save on the detail page ---------- */
-  var addBtn = $('#addToBag');
-  if (addBtn) {
-    addBtn.addEventListener('click', function () {
-      var title  = $('.pdp-title');
-      var finish = $('#finishName');
-      var size   = $('#sizes .chip.active');
-      count += qty;
-      if (badge) badge.textContent = String(count);
-      say(
-        (title ? title.textContent.trim() : 'Piece') +
-        ' · ' + (finish ? finish.textContent : '') +
-        ' · ' + (size ? size.getAttribute('data-name') : '') +
-        ' ×' + qty + ' added'
-      );
-    });
-  }
-  var wishBtn = $('#wishBtn');
-  if (wishBtn) {
-    wishBtn.addEventListener('click', function () {
-      var on = wishBtn.classList.toggle('btn--solid');
-      var span = $('span', wishBtn);
-      if (span) span.textContent = on ? 'Saved' : 'Save';
-      say(on ? 'Saved to your wishlist' : 'Removed from wishlist');
-    });
-  }
-
-  /* ---------- Accordion ---------- */
-  var setAccHeight = function (item) {
-    var body = $('.acc-body', item);
-    if (!body) return;
-    body.style.maxHeight = item.classList.contains('open') ? body.scrollHeight + 'px' : '0px';
-  };
-  $$('#acc .acc-item').forEach(function (item) {
-    setAccHeight(item);
-    var head = $('.acc-head', item);
-    if (!head) return;
-    head.addEventListener('click', function () {
-      var wasOpen = item.classList.contains('open');
-      $$('#acc .acc-item').forEach(function (other) {
-        other.classList.remove('open');
-        setAccHeight(other);
-      });
-      if (!wasOpen) { item.classList.add('open'); setAccHeight(item); }
-    });
-  });
-  window.addEventListener('resize', function () {
-    $$('#acc .acc-item.open').forEach(setAccHeight);
-  });
-
   /* ---------- Smooth anchor offset ---------- */
   $$('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
@@ -308,20 +161,14 @@
   });
 
   /* ---------- Floating WhatsApp button ----------
-     Set the shop number once, here: digits only, country code first,
-     e.g. '923001234567'. While it is empty the button is not shown. */
-  var SHOP_WHATSAPP = '923162464884';
+     The shop number is set once, in catalog.js (window.MISORAA_WHATSAPP). While it is empty the
+     button is not shown. product-page.js swaps in a message naming the watch being viewed. */
+  var SHOP_WHATSAPP = window.MISORAA_WHATSAPP || '';
   if (SHOP_WHATSAPP) {
-    var waTitle = $('.pdp-title');
-    var waRef   = $('.pdp-ref');
-    var waText  = waTitle
-      ? 'Hello MISORAA, I am interested in the ' + waTitle.textContent.trim() +
-        (waRef ? ' (' + waRef.textContent.split('\u00B7')[0].trim() + ')' : '') + '.'
-      : 'Hello MISORAA, I would like to know more about your watches.';
-
     var wa = document.createElement('a');
     wa.className = 'wa-float';
-    wa.href = 'https://wa.me/' + SHOP_WHATSAPP + '?text=' + encodeURIComponent(waText);
+    wa.href = 'https://wa.me/' + SHOP_WHATSAPP + '?text=' +
+      encodeURIComponent('Hello MISORAA, I would like to know more about your watches.');
     wa.target = '_blank';
     wa.rel = 'noopener';
     wa.setAttribute('aria-label', 'Chat with MISORAA on WhatsApp');

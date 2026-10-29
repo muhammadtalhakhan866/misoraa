@@ -1,0 +1,6 @@
+# Local-only files that must not be deployed
+server.js
+README.md
+.claude
+.devdata
+ADMIN-SETUP.md

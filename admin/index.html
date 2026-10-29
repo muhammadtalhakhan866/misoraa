@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MISORAA Admin</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold-100:#FBF3DA;--gold-200:#F2DFAE;--gold-300:#E6C786;--gold-400:#D4AF62;--gold-500:#C19843;--gold-600:#A2782F;--gold-700:#7E5B21;
+  --ink-900:#000;--ink-850:#060606;--ink-800:#0B0B0C;--ink-700:#121214;--ink-600:#1A1A1D;--ink-500:#242428;
+  --line:rgba(212,175,98,.2);--line-soft:rgba(255,255,255,.08);
+  --text:#F2EEE6;--text-dim:#BCB5A8;--text-faint:#948D81;
+  --grad:linear-gradient(135deg,#A2782F,#E6C786 50%,#A2782F);
+  --serif:"Cormorant Garamond",Georgia,serif;--sans:"Jost","Helvetica Neue",Arial,sans-serif;
+  --danger:#E27D6B;--ok:#7FC49A;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--ink-900);color:var(--text);font:300 15px/1.6 var(--sans);-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(ellipse 60% 40% at 90% 0%,rgba(212,175,98,.12),transparent 70%),radial-gradient(ellipse 50% 40% at 0% 60%,rgba(162,120,47,.09),transparent 70%);background-attachment:fixed}
+[hidden]{display:none !important}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;line-height:1.15}
+button,input,textarea{font:inherit;color:inherit}
+a{color:var(--gold-300)}
+.gold{background:linear-gradient(135deg,#A2782F,#FBF3DA 45%,#D4AF62);-webkit-background-clip:text;background-clip:text;color:transparent}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:rgba(6,6,6,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px}
+.brand{display:flex;align-items:baseline;gap:12px;font-family:var(--serif);font-size:24px;letter-spacing:.14em}
+.brand small{font:400 10px var(--sans);letter-spacing:.3em;text-transform:uppercase;color:var(--text-faint)}
+.bar nav{display:flex;gap:10px;align-items:center}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;border:1px solid var(--gold-600);background:transparent;color:var(--gold-200);
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:background .3s,color .3s,border-color .3s}
+.btn:hover{background:rgba(212,175,98,.1);border-color:var(--gold-400)}
+.btn.solid{background:var(--grad);color:#140E03;border-color:transparent;font-weight:500}
+.btn.solid:hover{filter:brightness(1.1)}
+.btn.small{padding:8px 13px;font-size:10px}
+.btn.danger{border-color:#7a3a30;color:var(--danger)}
+.btn.danger:hover{background:rgba(226,125,107,.1)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.icon{width:36px;height:36px;display:inline-grid;place-items:center;border:1px solid var(--line-soft);background:none;color:var(--text-dim);cursor:pointer;font-size:15px;transition:all .25s}
+.icon:hover:not(:disabled){border-color:var(--gold-600);color:var(--gold-200)}
+.icon:disabled{opacity:.3;cursor:not-allowed}
+.icon.on{border-color:var(--gold-500);color:#140E03;background:var(--grad)}
+
+/* login */
+.login{max-width:420px;margin:12vh auto 0;padding:40px 36px;border:1px solid var(--line);border-radius:20px;background:var(--ink-800)}
+.login h1{font-size:34px;margin:8px 0 6px}
+.eyebrow{font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-400);margin:0}
+.muted{color:var(--text-dim)}
+.field{display:block;margin:0 0 18px}
+.field>span{display:block;margin-bottom:8px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-faint)}
+.field>span em{font-style:normal;color:var(--gold-400);margin-left:6px;letter-spacing:.14em}
+.field input[type=text],.field input[type=password],.field input[type=number],.field textarea{
+  width:100%;background:var(--ink-900);border:1px solid var(--line-soft);padding:12px 14px;font-size:15px;transition:border-color .25s}
+.field textarea{min-height:130px;resize:vertical;line-height:1.7}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--gold-500)}
+.hint{display:block;margin-top:6px;font-size:12px;color:var(--text-faint)}
+.err{min-height:20px;margin:0 0 12px;font-size:13px;color:var(--danger)}
+
+/* banners */
+.banner{margin:22px 0 0;padding:14px 18px;border:1px solid var(--line);border-radius:12px;background:rgba(212,175,98,.07);color:var(--gold-200);font-size:14px}
+.banner.bad{border-color:#7a3a30;background:rgba(226,125,107,.07);color:var(--danger)}
+
+/* list */
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:36px 0 22px}
+.head h2{font-size:38px}
+.rows{display:grid;gap:12px;padding-bottom:80px}
+.row{display:grid;grid-template-columns:84px 1fr auto;gap:18px;align-items:center;padding:14px 16px;border:1px solid var(--line-soft);border-radius:16px;
+  background:linear-gradient(180deg,rgba(212,175,98,.06),transparent 60%),var(--ink-800);transition:border-color .3s}
+.row:hover{border-color:var(--line)}
+.row.hiddenrow{opacity:.6}
+.thumb{width:84px;height:84px;border-radius:12px;background:radial-gradient(circle at 50% 40%,rgba(193,152,67,.18),transparent 70%),var(--ink-700);border:1px solid var(--line-soft);display:grid;place-items:center;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.thumb svg{width:60%;height:auto}
+.thumb svg.ph{width:46%;opacity:.5}
+.row .info{min-width:0}
+.row .name{font:400 24px/1.2 var(--serif)}
+.row .meta{margin-top:2px;font-size:13px;color:var(--text-dim)}
+.tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.tag{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;padding:3px 9px;border:1px solid var(--gold-700);color:var(--gold-300);border-radius:20px}
+.tag.sig{background:var(--grad);color:#140E03;border-color:transparent;font-weight:500}
+.tag.off{border-color:var(--line-soft);color:var(--text-faint)}
+.acts{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.acts .sep{width:1px;height:22px;background:var(--line-soft);margin:0 4px}
+.empty{padding:50px 20px;text-align:center;border:1px dashed var(--line);border-radius:16px;color:var(--text-dim)}
+
+/* editor */
+dialog{width:calc(100% - 28px);max-width:900px;max-height:calc(100dvh - 28px);padding:0;color:var(--text);background:var(--ink-800);
+  border:1px solid var(--line);border-radius:22px;box-shadow:0 40px 90px rgba(0,0,0,.8)}
+dialog::backdrop{background:rgba(0,0,0,.55);backdrop-filter:blur(10px)}
+.ed{padding:32px 36px 28px}
+.ed h2{font-size:34px;margin:6px 0 24px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 24px}
+.cols .full{grid-column:1/-1}
+.sechead{margin:8px 0 14px;padding-top:20px;border-top:1px solid var(--line-soft);font:400 10.5px var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--gold-400)}
+.specrow{display:grid;grid-template-columns:1fr 1.4fr auto;gap:10px;margin-bottom:10px}
+.specrow input{width:100%;background:var(--ink-900);border:1px solid var(--line-soft);padding:10px 12px;font-size:14px}
+.specrow input:focus{outline:none;border-color:var(--gold-500)}
+.photos{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-bottom:12px}
+.ph{position:relative;aspect-ratio:1;border:1px solid var(--line-soft);border-radius:12px;overflow:hidden;background:var(--ink-700);display:grid;place-items:center}
+.ph img{width:100%;height:100%;object-fit:cover}
+.ph .main{position:absolute;left:6px;top:6px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:var(--grad);color:#140E03;font-weight:500}
+.ph .ctl{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:5px;background:linear-gradient(transparent,rgba(0,0,0,.85))}
+.ph .ctl button{width:28px;height:28px;border:0;border-radius:50%;background:rgba(0,0,0,.6);color:var(--text);cursor:pointer;font-size:13px}
+.ph .ctl button:hover:not(:disabled){background:var(--gold-500);color:#140E03}
+.ph .ctl button:disabled{opacity:.3;cursor:default}
+.ph.up{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-dim)}
+.ph.up::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(212,175,98,.18),transparent);animation:sweep 1.2s linear infinite}
+@keyframes sweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.artnote{display:flex;gap:14px;align-items:center;padding:12px 14px;margin-bottom:12px;border:1px solid var(--line-soft);border-radius:12px;font-size:13.5px;color:var(--text-dim)}
+.artnote .thumb{width:56px;height:56px;flex:none}
+.switches{display:grid;gap:10px}
+.sw{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border:1px solid var(--line-soft);border-radius:12px;cursor:pointer}
+.sw input{margin-top:4px;accent-color:#D4AF62;width:17px;height:17px;flex:none}
+.sw b{display:block;font-weight:400;color:var(--text)}
+.sw small{color:var(--text-faint);font-size:12.5px}
+.foot{display:flex;gap:12px;justify-content:flex-end;margin-top:22px;padding-top:20px;border-top:1px solid var(--line-soft)}
+.toast{position:fixed;left:50%;bottom:26px;z-index:100;transform:translate(-50%,140%);opacity:0;padding:14px 22px;background:var(--ink-600);border:1px solid var(--gold-700);border-radius:12px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-200);transition:all .4s}
+.toast.show{transform:translate(-50%,0);opacity:1}
+.toast.bad{border-color:#7a3a30;color:var(--danger)}
+
+@media(max-width:760px){
+  .wrap{padding:0 16px}
+  .row{grid-template-columns:64px 1fr;gap:12px}
+  .thumb{width:64px;height:64px}
+  .acts{grid-column:1/-1;justify-content:flex-start}
+  .ed{padding:26px 20px 22px}
+  .cols{grid-template-columns:1fr}
+  .head h2{font-size:32px}
+}
+</style>
+</head>
+<body>
+<div id="sprite" aria-hidden="true"></div>
+<script src="../assets/js/sprite.js"></script>
+
+<!-- ===================== sign in ===================== -->
+<section id="loginView" hidden>
+  <form class="login" id="loginForm" novalidate>
+    <p class="eyebrow">MISORAA</p>
+    <h1>Admin</h1>
+    <p class="muted" id="loginNote" style="margin:0 0 26px">Sign in to manage your watches.</p>
+    <label class="field"><span>Password</span><input type="password" id="pw" autocomplete="current-password" required></label>
+    <p class="err" id="loginErr" role="alert"></p>
+    <button class="btn solid" type="submit" style="width:100%">Sign In</button>
+  </form>
+</section>
+
+<!-- ===================== the watches ===================== -->
+<div id="mainView" hidden>
+  <header class="bar"><div class="wrap">
+    <div class="brand"><span class="gold">MISORAA</span><small>Admin</small></div>
+    <nav>
+      <a class="btn small" href="../" target="_blank" rel="noopener">View Site</a>
+      <button class="btn small" id="logout" type="button">Log Out</button>
+    </nav>
+  </div></header>
+
+  <main class="wrap">
+    <div class="banner" id="seedBanner" hidden>These are the six watches built into the site. They become your own list the first time you save a change.</div>
+    <div class="banner bad" id="storeBanner" hidden>Saving is not available yet: storage has not been connected to this site. Everything here works once a Blob store is linked in Vercel.</div>
+
+    <div class="head">
+      <div><p class="eyebrow">The Collection</p><h2>Your <span class="gold">Watches</span></h2></div>
+      <button class="btn solid" id="addBtn" type="button">+ Add a Watch</button>
+    </div>
+    <div class="rows" id="rows"></div>
+  </main>
+</div>
+
+<!-- ===================== add / edit ===================== -->
+<dialog id="editor" aria-labelledby="edTitle">
+  <form class="ed" id="edForm" novalidate>
+    <p class="eyebrow" id="edKind">Edit</p>
+    <h2 id="edTitle">Watch</h2>
+
+    <div class="cols">
+      <label class="field"><span>Name <em>Required</em></span><input type="text" id="fName" maxlength="80" autocomplete="off"></label>
+      <label class="field"><span>Reference</span><input type="text" id="fRef" maxlength="24" placeholder="e.g. MSR–07X" autocomplete="off"></label>
+
+      <label class="field"><span>Price in PKR <em>Required</em></span><input type="number" id="fPrice" min="0" step="1" inputmode="numeric"></label>
+      <label class="field"><span>Old price (optional)</span><input type="number" id="fWas" min="0" step="1" inputmode="numeric"><small class="hint">Shown crossed out beside the price, with the saving.</small></label>
+
+      <label class="field"><span>Label on the card</span><input type="text" id="fTag" maxlength="24" placeholder="e.g. New Release, Bestseller"></label>
+      <label class="sw" style="align-self:center;margin-bottom:18px"><input type="checkbox" id="fTagGold"><span><b>Highlight the label</b><small>Gold fill instead of an outline.</small></span></label>
+
+      <label class="field full"><span>Caption</span><input type="text" id="fCaption" maxlength="140" placeholder="One short line, shown under the name on the card"></label>
+      <label class="field full"><span>Description</span><textarea id="fDesc" maxlength="4000" placeholder="Tell the story of this watch. Leave a blank line to start a new paragraph."></textarea></label>
+    </div>
+
+    <div class="sechead">Pictures</div>
+    <div id="artNote" class="artnote" hidden></div>
+    <div class="photos" id="photos"></div>
+    <input type="file" id="fileIn" accept="image/jpeg,image/png,image/webp,image/*" multiple hidden>
+    <button class="btn small" type="button" id="addPhotos">+ Add Pictures</button>
+    <span class="hint" id="photoHint" style="display:inline-block;margin-left:12px">The first picture is the main one. Use the arrows to reorder.</span>
+
+    <div class="sechead">Specifications <span class="muted" style="letter-spacing:.06em;text-transform:none;font-size:12px">(optional)</span></div>
+    <div id="specs"></div>
+    <button class="btn small" type="button" id="addSpec">+ Add a Row</button>
+
+    <div class="sechead">Show on the site</div>
+    <div class="switches">
+      <label class="sw"><input type="checkbox" id="fSignature"><span><b>Signature piece</b><small>Featured in its own section on the home page. Only one watch can be the signature, so choosing this replaces the current one.</small></span></label>
+      <label class="sw"><input type="checkbox" id="fHot"><span><b>Hot item</b><small>Shown under every watch page as “Most Wanted”.</small></span></label>
+      <label class="sw"><input type="checkbox" id="fVisible"><span><b>Visible on the site</b><small>Untick to hide it without deleting it.</small></span></label>
+    </div>
+
+    <p class="err" id="edErr" role="alert" style="margin-top:18px"></p>
+    <div class="foot">
+      <button class="btn" type="button" id="edCancel">Cancel</button>
+      <button class="btn solid" type="submit" id="edSave">Save Watch</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="../assets/js/products-seed.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var $ = function (s) { return document.querySelector(s); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var clone = function (o) { return JSON.parse(JSON.stringify(o)); };
+  var money = function (n) { return 'PKR ' + Number(n || 0).toLocaleString('en-US'); };
+
+  var state = { products: [], usingSeed: false, maxPhotos: 8, storage: true };
+  var draft = null;          // the watch being edited
+  var draftIsNew = false;
+  var fresh = new Set();     // pictures uploaded in this editor but not saved yet
+  var uploading = 0;
+  var toastTimer;
+
+  /* ---------- tiny helpers ---------- */
+  function toast(msg, bad) {
+    var t = $('#toast');
+    t.textContent = msg;
+    t.className = 'toast show' + (bad ? ' bad' : '');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { t.className = 'toast'; }, 3200);
+  }
+
+  function api(method, url, body, headers) {
+    var opts = { method: method, credentials: 'same-origin', headers: Object.assign({ 'x-requested-with': 'misoraa-admin' }, headers || {}) };
+    if (body !== undefined) {
+      if (body instanceof Blob) { opts.body = body; }
+      else { opts.body = JSON.stringify(body); opts.headers['Content-Type'] = 'application/json'; }
+    }
+    return fetch(url, opts).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (data) {
+        if (r.status === 401 && url !== '/api/login') { showLogin('Please sign in again.'); }
+        if (!r.ok) { var e = new Error(data.error || ('Something went wrong (' + r.status + ').')); e.status = r.status; throw e; }
+        return data;
+      });
+    });
+  }
+
+  /* ---------- sign in / out ---------- */
+  function showLogin(note, notConfigured) {
+    $('#mainView').hidden = true;
+    $('#loginView').hidden = false;
+    $('#loginNote').textContent = note || 'Sign in to manage your watches.';
+    $('#loginErr').textContent = notConfigured ? 'The admin password has not been set up yet. Add ADMIN_PASSWORD in the Vercel project settings, then redeploy.' : '';
+    $('#pw').value = '';
+    if (!notConfigured) setTimeout(function () { $('#pw').focus(); }, 50);
+  }
+
+  $('#loginForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var pw = $('#pw').value;
+    if (!pw) { $('#loginErr').textContent = 'Please enter the password.'; return; }
+    $('#loginErr').textContent = '';
+    api('POST', '/api/login', { password: pw }).then(boot).catch(function (err) { $('#loginErr').textContent = err.message; });
+  });
+
+  $('#logout').addEventListener('click', function () {
+    api('POST', '/api/logout', {}).catch(function () {}).then(function () { showLogin('You have been signed out.'); });
+  });
+
+  /* ---------- boot ---------- */
+  function boot() {
+    api('GET', '/api/session').then(function (s) {
+      state.maxPhotos = s.maxPhotos || 8;
+      state.storage = s.storage !== false;
+      if (!s.configured) { showLogin('', true); return; }
+      if (!s.admin) { showLogin(); return; }
+      return api('GET', '/api/products?all=1').then(function (d) {
+        if (d && Array.isArray(d.products)) { state.products = d.products; state.usingSeed = false; }
+        else { state.products = clone((window.MISORAA_SEED && window.MISORAA_SEED.products) || []); state.usingSeed = true; }
+        $('#loginView').hidden = true;
+        $('#mainView').hidden = false;
+        $('#seedBanner').hidden = !state.usingSeed;
+        $('#storeBanner').hidden = state.storage;
+        render();
+      });
+    }).catch(function (err) { showLogin(err.message); });
+  }
+
+  /* ---------- saving the whole list ---------- */
+  function persist(list, okMessage) {
+    return api('PUT', '/api/products', { products: list }).then(function (saved) {
+      state.products = saved.products;
+      state.usingSeed = false;
+      $('#seedBanner').hidden = true;
+      render();
+      if (okMessage) toast(okMessage);
+      return saved;
+    });
+  }
+
+  /* ---------- the list ---------- */
+  function thumbHTML(p) {
+    if (p.photos && p.photos.length) return '<img src="' + esc(p.photos[0]) + '" alt="">';
+    if (p.art) return '<svg viewBox="0 0 300 440"><use href="#' + esc(p.art) + '"/></svg>';
+    return '<svg class="ph" viewBox="0 0 200 200"><use href="#logo-mark"/></svg>';
+  }
+
+  function render() {
+    var rows = $('#rows');
+    if (!state.products.length) {
+      rows.innerHTML = '<div class="empty">No watches yet. Add your first one.</div>';
+      return;
+    }
+    rows.innerHTML = state.products.map(function (p, i) {
+      var tags = '';
+      if (p.signature) tags += '<span class="tag sig">Signature</span>';
+      if (p.hot) tags += '<span class="tag">Hot</span>';
+      if (p.visible === false) tags += '<span class="tag off">Hidden</span>';
+      if (!(p.photos && p.photos.length)) tags += '<span class="tag off">No photo yet</span>';
+      return '<div class="row' + (p.visible === false ? ' hiddenrow' : '') + '" data-id="' + esc(p.id) + '">' +
+        '<div class="thumb">' + thumbHTML(p) + '</div>' +
+        '<div class="info"><div class="name">' + esc(p.name) + '</div>' +
+          '<div class="meta">' + (p.ref ? esc(p.ref) + ' · ' : '') + money(p.price) + (p.wasPrice ? ' <s>' + money(p.wasPrice) + '</s>' : '') + '</div>' +
+          '<div class="tags">' + tags + '</div></div>' +
+        '<div class="acts">' +
+          '<button class="icon' + (p.signature ? ' on' : '') + '" data-act="sig" title="' + (p.signature ? 'This is the signature piece' : 'Make this the signature piece') + '" aria-pressed="' + !!p.signature + '">★</button>' +
+          '<button class="icon' + (p.hot ? ' on' : '') + '" data-act="hot" title="' + (p.hot ? 'Hot item — click to remove' : 'Mark as a hot item') + '" aria-pressed="' + !!p.hot + '">♨</button>' +
+          '<span class="sep"></span>' +
+          '<button class="icon" data-act="up" title="Move up"' + (i === 0 ? ' disabled' : '') + '>↑</button>' +
+          '<button class="icon" data-act="down" title="Move down"' + (i === state.products.length - 1 ? ' disabled' : '') + '>↓</button>' +
+          '<a class="btn small" href="../product.html?id=' + encodeURIComponent(p.id) + '" target="_blank" rel="noopener">View</a>' +
+          '<button class="btn small" data-act="edit">Edit</button>' +
+          '<button class="btn small danger" data-act="del">Delete</button>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  $('#rows').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-act]');
+    if (!btn) return;
+    var row = btn.closest('.row');
+    var id = row.getAttribute('data-id');
+    var list = clone(state.products);
+    var i = list.findIndex(function (p) { return p.id === id; });
+    if (i < 0) return;
+    var act = btn.getAttribute('data-act');
+
+    if (act === 'edit') { openEditor(list[i], false); return; }
+
+    if (act === 'del') {
+      if (!confirm('Delete “' + list[i].name + '” for good?\n\nIts pictures are deleted too. To keep it but hide it from the site, use Edit and untick “Visible on the site”.')) return;
+      list.splice(i, 1);
+      persist(list, 'Deleted').catch(function (err) { toast(err.message, true); });
+      return;
+    }
+    if (act === 'up' || act === 'down') {
+      var j = act === 'up' ? i - 1 : i + 1;
+      if (j < 0 || j >= list.length) return;
+      var t = list[i]; list[i] = list[j]; list[j] = t;
+      persist(list, 'Order saved').catch(function (err) { toast(err.message, true); });
+      return;
+    }
+    if (act === 'sig') {
+      var on = !list[i].signature;
+      list.forEach(function (p) { p.signature = false; });
+      list[i].signature = on;
+      if (on) list[i].visible = true;          // the signature has to be visible
+      persist(list, on ? list[i].name + ' is now the signature piece' : 'No signature piece').catch(function (err) { toast(err.message, true); });
+      return;
+    }
+    if (act === 'hot') {
+      list[i].hot = !list[i].hot;
+      persist(list, list[i].hot ? 'Marked as a hot item' : 'No longer a hot item').catch(function (err) { toast(err.message, true); });
+    }
+  });
+
+  /* ---------- the editor ---------- */
+  var slug = function (s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 34) || 'watch'; };
+  var rand = function () { return Math.random().toString(36).slice(2, 6); };
+
+  function openEditor(p, isNew) {
+    draftIsNew = isNew;
+    draft = clone(p);
+    draft.photos = draft.photos || [];
+    draft.specs = draft.specs || [];
+    fresh = new Set();
+    $('#edKind').textContent = isNew ? 'New Watch' : 'Edit Watch';
+    $('#edTitle').textContent = isNew ? 'Add a Watch' : p.name;
+    $('#fName').value = draft.name || '';
+    $('#fRef').value = draft.ref || '';
+    $('#fPrice').value = draft.price || draft.price === 0 ? draft.price : '';
+    $('#fWas').value = draft.wasPrice || '';
+    $('#fTag').value = draft.tag || '';
+    $('#fTagGold').checked = !!draft.tagGold;
+    $('#fCaption').value = draft.caption || '';
+    $('#fDesc').value = draft.description || '';
+    $('#fSignature').checked = !!draft.signature;
+    $('#fHot').checked = !!draft.hot;
+    $('#fVisible').checked = draft.visible !== false;
+    $('#edErr').textContent = '';
+    renderPhotos();
+    renderSpecs();
+    $('#editor').showModal();
+    if (isNew) $('#fName').focus();
+  }
+
+  /* pictures */
+  function renderPhotos() {
+    var wrap = $('#photos');
+    var html = draft.photos.map(function (u, i) {
+      return '<div class="ph" data-i="' + i + '"><img src="' + esc(u) + '" alt="">' +
+        (i === 0 ? '<span class="main">Main</span>' : '') +
+        '<div class="ctl"><button type="button" data-p="left" title="Move left"' + (i === 0 ? ' disabled' : '') + '>←</button>' +
+        '<button type="button" data-p="del" title="Remove">✕</button>' +
+        '<button type="button" data-p="right" title="Move right"' + (i === draft.photos.length - 1 ? ' disabled' : '') + '>→</button></div></div>';
+    }).join('');
+    for (var k = 0; k < uploading; k++) html += '<div class="ph up">Uploading</div>';
+    wrap.innerHTML = html;
+
+    var note = $('#artNote');
+    if (!draft.photos.length && !uploading) {
+      note.hidden = false;
+      note.innerHTML = '<div class="thumb">' + thumbHTML(draft) + '</div><span>' +
+        (draft.art ? 'No picture yet, so the site is showing the built-in illustration. Add a picture and it replaces it.' : 'No picture yet. Add one so the watch looks right on the site.') + '</span>';
+    } else { note.hidden = true; }
+    $('#addPhotos').disabled = draft.photos.length + uploading >= state.maxPhotos;
+    $('#photoHint').textContent = draft.photos.length + ' of ' + state.maxPhotos + ' pictures. The first is the main one; use the arrows to reorder.';
+  }
+
+  $('#photos').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-p]');
+    if (!b) return;
+    var i = parseInt(b.closest('.ph').getAttribute('data-i'), 10);
+    var act = b.getAttribute('data-p');
+    if (act === 'del') {
+      var url = draft.photos[i];
+      draft.photos.splice(i, 1);
+      if (fresh.has(url)) { fresh.delete(url); discard(url); }   // never saved, so remove it from storage now
+    } else {
+      var j = act === 'left' ? i - 1 : i + 1;
+      if (j < 0 || j >= draft.photos.length) return;
+      var t = draft.photos[i]; draft.photos[i] = draft.photos[j]; draft.photos[j] = t;
+    }
+    renderPhotos();
+  });
+
+  function discard(url) { api('DELETE', '/api/upload', { url: url }).catch(function () { /* a leftover file is harmless */ }); }
+
+  /* Shrink a picture in the browser so it uploads fast and loads fast on phones. */
+  function shrink(file) {
+    return createImageBitmap(file).then(function (bmp) {
+      var max = 1600, scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
+      var c = document.createElement('canvas');
+      c.width = Math.max(1, Math.round(bmp.width * scale));
+      c.height = Math.max(1, Math.round(bmp.height * scale));
+      c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+      var toBlob = function (type, q) { return new Promise(function (r) { c.toBlob(r, type, q); }); };
+      return toBlob('image/webp', 0.88).then(function (b) {
+        if (!b || b.type !== 'image/webp') return toBlob('image/jpeg', 0.88);
+        return b;
+      }).then(function (b) {
+        if (b && b.size > 3.8 * 1024 * 1024) return toBlob('image/jpeg', 0.7);
+        return b;
+      });
+    });
+  }
+
+  function addFiles(files) {
+    var room = state.maxPhotos - draft.photos.length - uploading;
+    var list = Array.prototype.slice.call(files).filter(function (f) { return /^image\//.test(f.type); });
+    if (!list.length) { $('#edErr').textContent = 'Please choose JPG, PNG or WebP pictures.'; return; }
+    if (list.length > room) { toast('Only ' + state.maxPhotos + ' pictures per watch', true); list = list.slice(0, Math.max(room, 0)); }
+    // One at a time, so the pictures land in the order they were chosen.
+    list.forEach(function (file) {
+      uploading++;
+      renderPhotos();
+      queue = queue.then(function () {
+        return shrink(file).then(function (blob) {
+          if (!blob) throw new Error('Could not read that picture. Try a JPG or PNG.');
+          return api('POST', '/api/upload', blob, { 'Content-Type': 'application/octet-stream', 'x-file-name': file.name });
+        }).then(function (r) {
+          draft.photos.push(r.url);
+          fresh.add(r.url);
+        }).catch(function (err) {
+          $('#edErr').textContent = err.message;
+        }).then(function () { uploading--; renderPhotos(); });
+      });
+    });
+  }
+  var queue = Promise.resolve();
+
+  $('#addPhotos').addEventListener('click', function () { $('#fileIn').click(); });
+  $('#fileIn').addEventListener('change', function (e) { if (e.target.files.length) addFiles(e.target.files); e.target.value = ''; });
+
+  /* specifications */
+  function renderSpecs() {
+    $('#specs').innerHTML = draft.specs.map(function (s, i) {
+      return '<div class="specrow" data-i="' + i + '"><input type="text" data-k="label" maxlength="40" placeholder="e.g. Case" value="' + esc(s.label) + '">' +
+        '<input type="text" data-k="value" maxlength="90" placeholder="e.g. 42 mm · 316L Steel" value="' + esc(s.value) + '">' +
+        '<button type="button" class="icon" data-del title="Remove this row">✕</button></div>';
+    }).join('');
+  }
+  $('#specs').addEventListener('input', function (e) {
+    var row = e.target.closest('.specrow');
+    if (row && e.target.dataset.k) draft.specs[parseInt(row.dataset.i, 10)][e.target.dataset.k] = e.target.value;
+  });
+  $('#specs').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-del]');
+    if (!b) return;
+    draft.specs.splice(parseInt(b.closest('.specrow').dataset.i, 10), 1);
+    renderSpecs();
+  });
+  $('#addSpec').addEventListener('click', function () {
+    if (draft.specs.length >= 14) { toast('Up to 14 rows', true); return; }
+    draft.specs.push({ label: '', value: '' });
+    renderSpecs();
+    var rows = document.querySelectorAll('#specs .specrow');
+    rows[rows.length - 1].querySelector('input').focus();
+  });
+
+  /* closing and saving */
+  function closeEditor() {
+    fresh.forEach(discard);          // pictures uploaded but never saved
+    fresh = new Set();
+    var d = $('#editor');
+    if (d.open) d.close();
+  }
+  $('#edCancel').addEventListener('click', closeEditor);
+  $('#editor').addEventListener('cancel', function () { fresh.forEach(discard); fresh = new Set(); });   // Esc key
+
+  $('#addBtn').addEventListener('click', function () {
+    openEditor({ id: '', name: '', ref: '', caption: '', description: '', price: '', wasPrice: 0, tag: '', tagGold: false,
+      specs: [], photos: [], art: '', signature: false, hot: false, visible: true }, true);
+  });
+
+  $('#edForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var err = $('#edErr');
+    err.textContent = '';
+    var name = $('#fName').value.trim();
+    var price = $('#fPrice').value === '' ? NaN : Number($('#fPrice').value);
+    var was = $('#fWas').value === '' ? 0 : Number($('#fWas').value);
+    if (!name) { err.textContent = 'Please give the watch a name.'; $('#fName').focus(); return; }
+    if (!(price >= 0)) { err.textContent = 'Please enter the price.'; $('#fPrice').focus(); return; }
+    if (was && was <= price) { err.textContent = 'The old price has to be higher than the price (or leave it empty).'; $('#fWas').focus(); return; }
+    if (uploading) { err.textContent = 'Please wait for the pictures to finish uploading.'; return; }
+
+    var item = clone(draft);
+    item.id = draftIsNew ? slug(name) + '-' + rand() : draft.id;
+    item.name = name;
+    item.ref = $('#fRef').value.trim();
+    item.price = price;
+    item.wasPrice = was;
+    item.tag = $('#fTag').value.trim();
+    item.tagGold = $('#fTagGold').checked;
+    item.caption = $('#fCaption').value.trim();
+    item.description = $('#fDesc').value.trim();
+    item.specs = draft.specs.filter(function (s) { return s.label.trim() && s.value.trim(); });
+    item.signature = $('#fSignature').checked;
+    item.hot = $('#fHot').checked;
+    item.visible = $('#fVisible').checked;
+    if (item.signature && !item.visible) { err.textContent = 'The signature piece has to be visible. Tick “Visible on the site”, or untick “Signature piece”.'; return; }
+
+    var list = clone(state.products);
+    if (item.signature) list.forEach(function (p) { p.signature = false; });
+    if (draftIsNew) list.push(item);
+    else { var i = list.findIndex(function (p) { return p.id === item.id; }); if (i >= 0) list[i] = item; else list.push(item); }
+
+    var save = $('#edSave');
+    save.disabled = true;
+    save.textContent = 'Saving…';
+    persist(list, draftIsNew ? 'Watch added' : 'Saved').then(function () {
+      fresh = new Set();               // everything uploaded is now in use
+      $('#editor').close();
+    }).catch(function (e2) { err.textContent = e2.message; })
+      .then(function () { save.disabled = false; save.textContent = 'Save Watch'; });
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>

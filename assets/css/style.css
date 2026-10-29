@@ -810,3 +810,74 @@ body::before{
       radial-gradient(ellipse 100% 34% at 50% 104%,rgba(212,175,98,.12),transparent 70%)
   }
 }
+
+/* ==========================================================================
+   DATA-DRIVEN WATCH CARDS (built by catalog.js)
+   ========================================================================== */
+.card-name a::after{content:"";position:absolute;inset:0;z-index:3}   /* the whole card is the link */
+.card-quick-label{
+  display:block;width:100%;padding:13px;text-align:center;
+  background:var(--grad-gold-soft);color:#140E03;
+  font-size:10px;letter-spacing:.24em;text-transform:uppercase;font-weight:500
+}
+.card-was{margin-left:10px;color:var(--text-faint);font-size:15px;font-family:var(--serif)}
+.card-hot{
+  font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--gold-300);border:1px solid var(--gold-700);padding:4px 10px
+}
+.wp-photo{display:block;object-fit:cover}
+.card-media .wp-photo,.split-visual .wp-photo{position:absolute;inset:0;width:100%;height:100%;transition:transform .8s var(--ease)}
+.card:hover .card-media .wp-photo{transform:scale(1.06)}
+.card-media .wp-placeholder,.split-visual .wp-placeholder{width:44%;opacity:.45}
+.split-visual .corner{z-index:2}
+.cart-dot b[hidden]{display:none}
+
+/* ==========================================================================
+   THE BAG — a drawer from the right (built by bag.js)
+   ========================================================================== */
+.bag{
+  margin:0 0 0 auto;width:min(450px,100%);max-width:none;height:100dvh;max-height:none;padding:0;
+  color:var(--text);background:linear-gradient(180deg,rgba(212,175,98,.07),transparent 30%),var(--ink-800);
+  border:1px solid var(--line);border-right:0;border-radius:22px 0 0 22px;
+  box-shadow:-30px 0 80px rgba(0,0,0,.7)
+}
+.bag::backdrop{background:rgba(0,0,0,.5);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.bag[open]{animation:bag-in .45s var(--ease)}
+.bag[open]::backdrop{animation:rv-fade .45s var(--ease)}
+@keyframes bag-in{from{transform:translateX(60px);opacity:0}to{transform:none;opacity:1}}
+.bag-inner{display:flex;flex-direction:column;height:100%}
+.bag-head{display:flex;align-items:center;justify-content:space-between;padding:26px 28px 18px;border-bottom:1px solid var(--line-soft)}
+.bag-head h2{font-size:32px}
+.bag-close{width:38px;height:38px;border:0;background:none;color:var(--text-dim);font-size:28px;line-height:1;cursor:pointer;transition:color .3s var(--ease)}
+.bag-close:hover{color:var(--gold-300)}
+.bag-list{flex:1;overflow:auto;padding:8px 28px}
+.bag-line{display:grid;grid-template-columns:78px 1fr auto;gap:16px;align-items:start;padding:20px 0;border-bottom:1px solid var(--line-soft)}
+.bag-thumb{position:relative;display:grid;place-items:center;width:78px;height:78px;overflow:hidden;
+  border:1px solid var(--line-soft);border-radius:12px;background:radial-gradient(circle at 50% 40%,rgba(193,152,67,.18),transparent 70%),var(--ink-700)}
+.bag-thumb svg{width:62%;height:auto}
+.bag-thumb .wp-photo{position:absolute;inset:0;width:100%;height:100%}
+.bag-thumb .wp-placeholder{width:46%}
+.bag-info{display:flex;flex-direction:column;gap:3px;min-width:0}
+.bag-name{font-family:var(--serif);font-size:21px;line-height:1.2;color:var(--text)}
+.bag-name:hover{color:var(--gold-200)}
+.bag-ref{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-faint)}
+.bag-price{font-family:var(--serif);font-size:18px;color:var(--gold-300)}
+.bag-qty{display:inline-flex;align-items:center;margin-top:8px;border:1px solid var(--line);border-radius:30px;align-self:flex-start}
+.bag-qty button{width:34px;height:32px;border:0;background:none;color:var(--gold-300);font-size:18px;cursor:pointer}
+.bag-qty button:disabled{opacity:.3;cursor:default}
+.bag-qty button:hover:not(:disabled){color:var(--gold-100)}
+.bag-qty span{min-width:26px;text-align:center;font-family:var(--serif);font-size:18px}
+.bag-remove{width:32px;height:32px;border:0;background:none;color:var(--text-faint);font-size:15px;cursor:pointer;transition:color .3s var(--ease)}
+.bag-remove:hover{color:#E27D6B}
+.bag-empty{flex:1;display:grid;place-content:center;justify-items:center;gap:22px;padding:30px;text-align:center;color:var(--text-dim)}
+.bag-foot{padding:22px 28px 26px;border-top:1px solid var(--line-soft);background:rgba(0,0,0,.35)}
+.bag-total{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px}
+.bag-total span{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--text-faint)}
+.bag-total b{font-family:var(--serif);font-size:32px;font-weight:400}
+.bag-foot .btn{width:100%;justify-content:center}
+.bag-note{margin:14px 0 0;font-size:12.5px;line-height:1.7;color:var(--text-faint);text-align:center}
+@media(max-width:780px){
+  .bag{border-radius:0;width:100%}
+  .bag-head,.bag-list,.bag-foot{padding-left:20px;padding-right:20px}
+}
+.bag [hidden]{display:none !important}

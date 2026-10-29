@@ -218,3 +218,17 @@
   .team{grid-template-columns:1fr}
   .related{padding-bottom:90px}
 }
+
+/* ==========================================================================
+   DATA-DRIVEN PRODUCT PAGE (built by product-page.js)
+   ========================================================================== */
+.pdp-media{position:absolute;inset:0;display:grid;place-items:center;transition:opacity .28s var(--ease)}
+.pdp-stage.swapping .pdp-media{opacity:0}
+.pdp-stage .wp-photo{position:static;width:100%;height:100%;object-fit:contain;padding:3%}
+.pdp-stage .wp-placeholder{width:34%;opacity:.45}
+.pdp-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pdp-caption{margin:0 0 22px;font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.5;color:var(--gold-200)}
+.pdp-desc{margin-bottom:16px}
+.pdp-loading{grid-column:1/-1;padding:90px 0;text-align:center;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--text-faint)}
+.pdp-missing{grid-column:1/-1;padding:70px 0;text-align:center}
+.pdp-missing .section-sub{margin:0 auto 32px}

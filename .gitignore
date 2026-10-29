@@ -10,6 +10,9 @@ desktop.ini
 node_modules/
 npm-debug.log*
 
+# Local admin data (pictures and products saved while testing)
+.devdata/
+
 # Environment
 .env
 .env.local

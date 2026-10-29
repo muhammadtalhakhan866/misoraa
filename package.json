@@ -1,0 +1,9 @@
+{
+  "name": "misoraa-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MISORAA watch site with a small admin API for products and pictures.",
+  "dependencies": {
+    "@vercel/blob": "2.8.2"
+  }
+}
