@@ -57,7 +57,9 @@
       var raw = window.localStorage.getItem(STORE_KEY);
       var list = raw ? JSON.parse(raw) : [];
       var weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
-      return Array.isArray(list) ? list.filter(function (m) { return !m.at || m.at > weekAgo; }) : [];
+      // A copy with no id was made before reviews were sent to the shop (it only ever lived in this browser),
+      // so it is not "pending" anywhere and is dropped; the rest expire after a week.
+      return Array.isArray(list) ? list.filter(function (m) { return m.id && (!m.at || m.at > weekAgo); }) : [];
     } catch (e) { return []; }
   };
   var saveMine = function (list) {
