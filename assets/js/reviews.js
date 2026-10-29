@@ -132,8 +132,13 @@
     by.appendChild(who);
     c.appendChild(by);
 
-    var open = function () { openRead(r, isMine); };
-    c.addEventListener('click', open);
+    // A mouse click leaves the card focused; let go of it so nothing keeps the
+    // line paused afterwards. Keyboard users keep focus so the popup hands it back.
+    var open = function (viaKeyboard) {
+      if (!viaKeyboard && document.activeElement && document.activeElement.blur) document.activeElement.blur();
+      openRead(r, isMine);
+    };
+    c.addEventListener('click', function () { open(false); });
     if (clone) {
       c.setAttribute('aria-hidden', 'true');
     } else {
@@ -141,7 +146,7 @@
       c.setAttribute('role', 'button');
       c.setAttribute('aria-label', 'Read the full review by ' + r.name);
       c.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(true); }
       });
     }
     return c;
