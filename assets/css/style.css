@@ -429,6 +429,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:300;line-height:1.1;margin:0;le
 
 /* ---------- Testimonials ---------- */
 .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.quotes.quotes--single{grid-template-columns:minmax(0,680px);justify-content:center}
 .quote{border:1px solid var(--line-soft);padding:42px 34px;background:var(--ink-850);transition:border-color .5s var(--ease)}
 .quote:hover{border-color:var(--line)}
 .quote .stars{margin-bottom:22px;font-size:13px}
