@@ -1,6 +1,6 @@
 'use strict';
 const crypto = require('crypto');
-const { MAX_AGE, configured, sign, cookieHeader, send, sameSiteWrite, readJson } = require('./_lib');
+const { MAX_AGE, configured, adminPassword, sign, cookieHeader, send, sameSiteWrite, readJson } = require('./_lib');
 
 /* Best-effort throttle. Serverless instances do not share memory, so this slows a single
    visitor down rather than guaranteeing a hard limit; the fixed delay on every miss does the rest. */
@@ -27,7 +27,7 @@ module.exports = async function login(req, res) {
 
   /* Hash both sides first so the comparison is constant-time whatever the lengths. */
   const a = crypto.createHash('sha256').update(given).digest();
-  const b = crypto.createHash('sha256').update(process.env.ADMIN_PASSWORD).digest();
+  const b = crypto.createHash('sha256').update(adminPassword()).digest();
   if (!crypto.timingSafeEqual(a, b)) {
     entry.push(now);
     misses.set(ip, entry);

@@ -13,11 +13,15 @@ const ART = ['w-chrono', 'w-classic', 'w-diver', 'w-skeleton', 'w-tonneau', 'w-m
 /* The session key is derived from the admin password itself, so there is one secret to manage
    and changing the password signs every existing session out. */
 function sessionKey() {
-  const pw = process.env.ADMIN_PASSWORD;
+  const pw = adminPassword();
   return pw ? crypto.createHash('sha256').update('misoraa-session:' + pw).digest() : null;
 }
 
-function configured() { return !!process.env.ADMIN_PASSWORD; }
+/* Environment variable names are case-sensitive, and a mistyped one (Admin_Password) is easy to make in
+   the Vercel form, so both spellings are accepted. */
+function adminPassword() { return process.env.ADMIN_PASSWORD || process.env.Admin_Password || ''; }
+
+function configured() { return !!adminPassword(); }
 
 function sign(payload) {
   const body = Buffer.from(JSON.stringify(payload)).toString('base64url');
@@ -190,6 +194,6 @@ function photoUrlsIn(data) {
 }
 
 module.exports = {
-  COOKIE, MAX_AGE, MAX_PHOTOS, ART, configured, sign, isAdmin, cookieHeader, send, sameSiteWrite,
+  COOKIE, MAX_AGE, MAX_PHOTOS, ART, configured, adminPassword, sign, isAdmin, cookieHeader, send, sameSiteWrite,
   readStream, readJson, cleanProducts, photoUrlsIn, isBlobUrl, isDevUrl, readCookie
 };
