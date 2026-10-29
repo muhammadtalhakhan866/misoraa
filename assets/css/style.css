@@ -429,7 +429,6 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:300;line-height:1.1;margin:0;le
 
 /* ---------- Testimonials ---------- */
 .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
-.quotes.quotes--single{grid-template-columns:minmax(0,680px);justify-content:center}
 .quote{border:1px solid var(--line-soft);padding:42px 34px;background:var(--ink-850);transition:border-color .5s var(--ease)}
 .quote:hover{border-color:var(--line)}
 .quote .stars{margin-bottom:22px;font-size:13px}
@@ -545,3 +544,140 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:300;line-height:1.1;margin:0;le
 /* product name links on the collection cards */
 .card-name a{color:inherit;transition:color .35s var(--ease)}
 .card:hover .card-name a{color:var(--gold-200)}
+
+/* ==========================================================================
+   REVIEWS
+   ========================================================================== */
+.stars .off{color:var(--ink-500)}
+
+.rating-sum{display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin-top:6px}
+.rating-sum b{font-family:var(--serif);font-size:44px;font-weight:400;line-height:1}
+.rating-sum .stars{font-size:15px}
+.rating-sum small{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-faint)}
+
+.reviews-actions{display:flex;flex-direction:column;align-items:center;gap:34px;margin-top:64px}
+
+/* Drop a Review — a gold stroke that runs around a dark button */
+@property --rv-angle{syntax:'<angle>';initial-value:0deg;inherits:false}
+
+.btn-review{
+  position:relative;isolation:isolate;cursor:pointer;border:0;
+  padding:19px 46px;background:var(--ink-850);
+  font-family:var(--sans);font-size:11.5px;font-weight:500;letter-spacing:.28em;text-transform:uppercase;
+  box-shadow:inset 0 0 0 1px rgba(212,175,98,.22);
+  transition:box-shadow .5s var(--ease),transform .5s var(--ease)
+}
+.btn-review span{
+  background:var(--grad-gold);-webkit-background-clip:text;background-clip:text;color:transparent
+}
+/* the running stroke: a conic gold gradient, masked down to a 2px ring */
+.btn-review::before{
+  content:"";position:absolute;inset:0;z-index:-1;padding:2px;
+  background:conic-gradient(from var(--rv-angle),
+    transparent 0deg,transparent 140deg,
+    #8C6522 200deg,#D4AF62 250deg,#FBF3DA 300deg,#D4AF62 330deg,transparent 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;
+  animation:rv-run 3.2s linear infinite
+}
+/* soft glow that follows the stroke */
+.btn-review::after{
+  content:"";position:absolute;inset:-6px;z-index:-2;
+  background:conic-gradient(from var(--rv-angle),transparent 0deg,transparent 200deg,rgba(212,175,98,.45) 300deg,transparent 360deg);
+  filter:blur(14px);opacity:.55;animation:rv-run 3.2s linear infinite
+}
+@keyframes rv-run{to{--rv-angle:360deg}}
+.btn-review:hover{transform:translateY(-3px);box-shadow:inset 0 0 0 1px rgba(212,175,98,.5)}
+.btn-review:hover::before,.btn-review:hover::after{animation-duration:1.6s}
+.btn-review:focus-visible{outline:2px solid var(--gold-300);outline-offset:6px}
+
+/* Dialog */
+.rv-dialog{
+  width:calc(100% - 32px);max-width:520px;padding:0;color:var(--text);
+  background:var(--ink-800);border:1px solid var(--line);
+  box-shadow:0 40px 90px rgba(0,0,0,.8)
+}
+.rv-dialog::backdrop{background:rgba(0,0,0,.46);-webkit-backdrop-filter:blur(14px) saturate(.9);backdrop-filter:blur(14px) saturate(.9)}
+.rv-dialog[open]{animation:rv-in .5s var(--ease)}
+.rv-dialog[open]::backdrop{animation:rv-fade .5s var(--ease)}
+@keyframes rv-in{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes rv-fade{from{opacity:0}to{opacity:1}}
+.rv-dialog form{position:relative;padding:38px 40px 32px}
+.rv-dialog h3{font-size:30px;margin-bottom:22px}
+.rv-close{
+  position:absolute;top:14px;right:16px;width:38px;height:38px;border:0;background:none;
+  color:var(--text-dim);font-size:28px;line-height:1;cursor:pointer;transition:color .3s var(--ease)
+}
+.rv-close:hover{color:var(--gold-300)}
+
+.rv-field{display:block;margin-bottom:20px}
+.rv-field>span,.rv-rating legend{
+  display:block;margin-bottom:10px;padding:0;
+  font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--text-faint)
+}
+.rv-field input,.rv-field textarea{
+  width:100%;background:var(--ink-900);color:var(--text);
+  border:1px solid var(--line-soft);padding:14px 16px;
+  font-family:var(--sans);font-size:14.5px;font-weight:300;line-height:1.7;
+  transition:border-color .35s var(--ease)
+}
+.rv-field textarea{resize:vertical;min-height:92px}
+.rv-field input:focus,.rv-field textarea:focus{outline:none;border-color:var(--gold-500)}
+.rv-field small{display:block;margin-top:8px;text-align:right;font-size:11px;color:var(--text-faint);letter-spacing:.08em}
+
+.rv-rating{border:0;margin:0 0 24px;padding:0;text-align:center}
+.rv-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.rv-rate-label{min-height:26px;margin:12px 0 0;font-family:var(--serif);font-style:italic;font-size:20px;color:var(--gold-300)}
+.rv-star-row{display:inline-flex;flex-direction:row-reverse;gap:6px}
+.rv-star-row input{position:absolute;opacity:0;pointer-events:none}
+.rv-star-row label{font-size:46px;line-height:1;color:var(--ink-500);cursor:pointer;transition:color .2s var(--ease),transform .2s var(--ease)}
+.rv-star-row input:checked~label,
+.rv-star-row label:hover,
+.rv-star-row label:hover~label{color:var(--gold-400)}
+.rv-star-row label:hover{transform:scale(1.12)}
+.rv-star-row input:focus-visible+label{outline:1px solid var(--gold-300);outline-offset:3px}
+
+.rv-error{min-height:20px;margin:0 0 14px;font-size:12.5px;color:#E27D6B}
+.rv-dialog .btn{width:100%;justify-content:center}
+
+@media(prefers-reduced-motion:reduce){
+  .btn-review::before,.btn-review::after{animation:none}
+}
+@media(max-width:780px){
+  .rv-dialog form{padding:40px 24px 28px}
+  .rating-sum b{font-size:38px}
+  .reviews-actions{margin-top:48px}
+}
+
+/* .link-arrow is styled for anchors; as a button it needs the native chrome removed */
+button.link-arrow{background:none;border:0;border-bottom:1px solid transparent;cursor:pointer;font-family:var(--sans);font-weight:400}
+button.link-arrow:hover{border-bottom-color:var(--gold-500)}
+
+.rv-field em{margin-left:8px;font-style:normal;color:var(--gold-400);letter-spacing:.18em}
+.rv-field small.rv-hint{text-align:left;margin-top:8px}
+
+/* ==========================================================================
+   FLOATING WHATSAPP (added by main.js on every page)
+   ========================================================================== */
+.wa-float{
+  position:fixed;right:24px;bottom:26px;z-index:150;
+  width:58px;height:58px;border-radius:50%;
+  display:grid;place-items:center;color:#140E03;
+  background:var(--grad-gold-soft);
+  box-shadow:0 12px 30px rgba(0,0,0,.6),0 0 0 1px rgba(251,243,218,.35) inset;
+  transition:transform .4s var(--ease),box-shadow .4s var(--ease)
+}
+.wa-float svg{width:28px;height:28px}
+.wa-float::before{
+  content:"";position:absolute;inset:0;border-radius:50%;z-index:-1;
+  border:1px solid var(--gold-400);animation:wa-pulse 2.6s ease-out infinite
+}
+@keyframes wa-pulse{0%{transform:scale(1);opacity:.75}100%{transform:scale(1.7);opacity:0}}
+.wa-float:hover{transform:translateY(-4px) scale(1.05);box-shadow:0 18px 38px rgba(0,0,0,.7),0 0 26px rgba(212,175,98,.35)}
+.wa-float:focus-visible{outline:2px solid var(--gold-300);outline-offset:4px}
+.toast{right:100px}
+@media(prefers-reduced-motion:reduce){.wa-float::before{animation:none}}
+@media(max-width:780px){
+  .wa-float{right:16px;bottom:18px;width:54px;height:54px}
+  .toast{left:22px;right:22px;bottom:86px}
+}

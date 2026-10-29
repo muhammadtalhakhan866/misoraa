@@ -311,23 +311,20 @@
   </div>
 </section>
 
-<!-- ============================ TESTIMONIALS ============================ -->
-<section class="section">
+<!-- ============================ REVIEWS ============================ -->
+<section class="section" id="reviews">
   <div class="wrap">
     <div class="section-head center reveal">
       <p class="eyebrow center">Owners</p>
-      <h2 class="section-title">Worn, Not <span class="gold-text">Displayed</span>.</h2>
+      <h2 class="section-title">What Owners <span class="gold-text">Say</span>.</h2>
+      <div class="rating-sum" id="ratingSum"></div>
     </div>
 
-    <div class="quotes quotes--single">
-      <div class="quote reveal">
-        <div class="stars">★★★★★</div>
-        <p>“The weight is the first thing you notice. The second is that nobody can tell you what it cost — which is exactly the point.”</p>
-        <div class="quote-by">
-          <div class="avatar">A</div>
-          <div><b>Ahmed Raza</b><span>Karachi</span></div>
-        </div>
-      </div>
+    <div class="quotes" id="reviewGrid" aria-live="polite"></div>
+
+    <div class="reviews-actions reveal">
+      <button class="link-arrow" id="moreReviews" type="button">Show all reviews</button>
+      <button class="btn-review" id="openReview" type="button"><span>Drop a Review</span></button>
     </div>
   </div>
 </section>
@@ -407,8 +404,49 @@
   </div>
 </footer>
 
+<dialog class="rv-dialog" id="reviewDialog" aria-labelledby="rvTitle">
+  <form id="reviewForm" novalidate>
+    <button type="button" class="rv-close" id="rvClose" aria-label="Close">&times;</button>
+    <p class="eyebrow">Your Review</p>
+    <h3 id="rvTitle">How many stars would you give?</h3>
+
+    <fieldset class="rv-rating">
+      <legend class="rv-sr">Star rating</legend>
+      <div class="rv-star-row">
+        <input type="radio" name="rvRating" id="rvS5" value="5"><label for="rvS5" title="5 stars">&#9733;</label>
+        <input type="radio" name="rvRating" id="rvS4" value="4"><label for="rvS4" title="4 stars">&#9733;</label>
+        <input type="radio" name="rvRating" id="rvS3" value="3"><label for="rvS3" title="3 stars">&#9733;</label>
+        <input type="radio" name="rvRating" id="rvS2" value="2"><label for="rvS2" title="2 stars">&#9733;</label>
+        <input type="radio" name="rvRating" id="rvS1" value="1"><label for="rvS1" title="1 star">&#9733;</label>
+      </div>
+      <p class="rv-rate-label" id="rvRateLabel" aria-live="polite">Tap a star</p>
+    </fieldset>
+
+    <label class="rv-field">
+      <span>Your name</span>
+      <input id="rvName" type="text" maxlength="60" autocomplete="name" required>
+    </label>
+
+    <label class="rv-field">
+      <span>WhatsApp number <em>Required</em></span>
+      <input id="rvPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="20" placeholder="0300 1234567" required>
+      <small class="rv-hint">Never shown publicly.</small>
+    </label>
+
+    <label class="rv-field">
+      <span>Your review</span>
+      <textarea id="rvText" rows="4" maxlength="500" required></textarea>
+      <small id="rvCount">0 / 500</small>
+    </label>
+
+    <p class="rv-error" id="rvError" role="alert"></p>
+    <button class="btn btn--solid" type="submit"><span>Submit Review</span></button>
+  </form>
+</dialog>
+
 <div class="toast" id="toast"></div>
 
 <script src="assets/js/main.js"></script>
+<script src="assets/js/reviews.js"></script>
 </body>
 </html>

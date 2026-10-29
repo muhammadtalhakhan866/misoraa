@@ -307,6 +307,28 @@
     });
   });
 
+  /* ---------- Floating WhatsApp button ----------
+     Set the shop number once, here: digits only, country code first,
+     e.g. '923001234567'. While it is empty the button is not shown. */
+  var SHOP_WHATSAPP = '923162464884';
+  if (SHOP_WHATSAPP) {
+    var waTitle = $('.pdp-title');
+    var waRef   = $('.pdp-ref');
+    var waText  = waTitle
+      ? 'Hello MISORAA, I am interested in the ' + waTitle.textContent.trim() +
+        (waRef ? ' (' + waRef.textContent.split('\u00B7')[0].trim() + ')' : '') + '.'
+      : 'Hello MISORAA, I would like to know more about your watches.';
+
+    var wa = document.createElement('a');
+    wa.className = 'wa-float';
+    wa.href = 'https://wa.me/' + SHOP_WHATSAPP + '?text=' + encodeURIComponent(waText);
+    wa.target = '_blank';
+    wa.rel = 'noopener';
+    wa.setAttribute('aria-label', 'Chat with MISORAA on WhatsApp');
+    wa.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg>';
+    document.body.appendChild(wa);
+  }
+
   /* ---------- Year ---------- */
   var y = $('#year');
   if (y) y.textContent = String(new Date().getFullYear());
