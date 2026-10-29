@@ -881,3 +881,7 @@ body::before{
   .bag-head,.bag-list,.bag-foot{padding-left:20px;padding-right:20px}
 }
 .bag [hidden]{display:none !important}
+
+/* spam trap: off-screen, so people never see it but simple bots fill it in */
+.rv-trap{position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+.rv-consent{margin:16px 0 0;font-size:12px;line-height:1.7;text-align:center;color:var(--text-faint)}

@@ -4,7 +4,7 @@ Your admin page is at **https://misoraa.vercel.app/admin/**. It is not linked fr
 From there you can add watches, edit any watch, upload its pictures, write its caption and description,
 choose the **signature** piece, mark **hot** items, hide a watch, reorder the collection and delete.
 
-## One-time setup (two things only you can do)
+## One-time setup (things only you can do)
 
 Neither of these is in the code, on purpose: they are settings in your own Vercel account.
 
@@ -14,7 +14,11 @@ Neither of these is in the code, on purpose: they are settings in your own Verce
 2. **Set the admin password.**
    The project > **Settings** > **Environment Variables** > add `ADMIN_PASSWORD`, tick **Production**,
    and use a long password (12+ characters, not a name or a word). Only you should know it.
-3. **Redeploy** (Deployments > the latest one > Redeploy). Settings only apply to new deployments.
+3. **Customer reviews also need a second, private storage** (so phone numbers can never be public). In the same
+   Storage page create another **Blob** store, but choose **Private**, and connect it to the project with the
+   environment-variable prefix **REVIEWS**, so that its setting is called `REVIEWS_READ_WRITE_TOKEN`. If you ask Claude
+   to do this it can do it for you.
+4. **Redeploy** (Deployments > the latest one > Redeploy). Settings only apply to new deployments.
 
 Until step 1 is done the admin page says saving is not available. Until step 2 is done it says the
 password has not been set up. To change the password later, edit the variable and redeploy; everyone is
@@ -41,6 +45,27 @@ signed out when it changes.
 
 Changes are saved the moment you press Save (or use a star, flame or arrow). Allow about 15 to 30 seconds
 for the live site to show them.
+
+## Customer reviews
+
+The **Drop a Review** button on the home page lets a customer send their name, WhatsApp number, star rating
+and review. **Nothing appears on the website until you approve it.**
+
+In the admin page open the **Reviews** tab. The tab shows how many are waiting, and the browser tab title shows
+it too, for example "(2) MISORAA Admin". There is no email or WhatsApp alert, so look in now and then.
+
+- **Waiting** shows new reviews first. Each shows the customer's WhatsApp number with a **Message on WhatsApp**
+  button, in case you want to thank them or ask about a bad review.
+- You can fix a spelling mistake in the name or the review, and change the stars, before approving. The customer's
+  own words are kept: open "See the customer's original wording" to read them.
+- **Approve & Publish** puts it on the website (allow about a minute); it appears at the front of the moving
+  line of reviews. **Reject** keeps it off. **Take Off the Website** and **Move Back to Waiting** undo a decision.
+  **Delete** removes it for good. On an approved review, **Save & Update Site** publishes your corrections.
+
+**Privacy:** the WhatsApp number is stored only in a separate private storage area and is shown only on this admin
+page. It is never part of what the website shows. A visitor can send at most 4 reviews an hour, and a hidden trap
+field and a timer turn away most spam bots. The 20 reviews already on the site are written into the site itself,
+so they are not edited here.
 
 ## How customers buy
 

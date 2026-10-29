@@ -8,6 +8,7 @@ module.exports = function session(req, res) {
     configured: configured(),
     storage: store.available(),
     storageMode: store.mode(),
+    reviewStorage: store.privAvailable(),
     maxPhotos: MAX_PHOTOS
   }, { 'Cache-Control': 'no-store' });
 };

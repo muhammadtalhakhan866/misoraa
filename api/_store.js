@@ -87,4 +87,79 @@ async function removePhotos(urls) {
   }
 }
 
-module.exports = { DEV_ROOT, mode, available, readJson, writeJson, putPhoto, removePhotos };
+/* ---------- the private store (customer reviews, with their WhatsApp numbers) ----------
+   A second, PRIVATE Blob store, reached with REVIEWS_READ_WRITE_TOKEN. Nothing in it can be fetched
+   without that token, which is why phone numbers live here and never in the public store. On a
+   developer's machine it is a plain folder, .devdata/private/. */
+const privToken = () => process.env.REVIEWS_READ_WRITE_TOKEN;
+const privMode = () => (privToken() ? 'blob' : (process.env.VERCEL ? 'none' : 'files'));
+const privAvailable = () => privMode() !== 'none';
+
+async function privRead(key) {
+  if (privMode() === 'blob') {
+    const { get } = require('@vercel/blob');
+    const res = await get(key, { access: 'private', token: privToken(), useCache: false });
+    if (!res || res.statusCode !== 200) return null;
+    return JSON.parse(await new Response(res.stream).text());
+  }
+  if (privMode() === 'files') {
+    try { return JSON.parse(fs.readFileSync(devPath('private/' + key), 'utf8')); } catch (e) { return null; }
+  }
+  return null;
+}
+
+async function privWrite(key, data) {
+  const body = JSON.stringify(data);
+  if (privMode() === 'blob') {
+    const { put } = require('@vercel/blob');
+    await put(key, body, { access: 'private', token: privToken(), addRandomSuffix: false, allowOverwrite: true, contentType: 'application/json' });
+    return;
+  }
+  if (privMode() === 'files') {
+    const p = devPath('private/' + key);
+    fs.mkdirSync(path.dirname(p), { recursive: true });
+    fs.writeFileSync(p, body);
+    return;
+  }
+  throw new Error('The private review storage is not connected.');
+}
+
+/* Every key that starts with the prefix, e.g. "submissions/". */
+async function privList(prefix) {
+  if (privMode() === 'blob') {
+    const { list } = require('@vercel/blob');
+    const keys = [];
+    let cursor;
+    do {
+      const page = await list({ prefix, limit: 1000, cursor, token: privToken() });
+      page.blobs.forEach((b) => keys.push(b.pathname));
+      cursor = page.hasMore ? page.cursor : undefined;
+    } while (cursor);
+    return keys;
+  }
+  if (privMode() === 'files') {
+    const folder = prefix.replace(/[^/]*$/, '');          // "submissions/" from "submissions/abc"
+    try {
+      return fs.readdirSync(devPath('private/' + folder)).map((f) => folder + f).filter((k) => k.startsWith(prefix));
+    } catch (e) { return []; }
+  }
+  return [];
+}
+
+async function privRemove(keys) {
+  const list = Array.isArray(keys) ? keys : [keys];
+  if (!list.length) return;
+  if (privMode() === 'blob') {
+    const { del } = require('@vercel/blob');
+    await del(list, { token: privToken() });
+    return;
+  }
+  if (privMode() === 'files') {
+    list.forEach((k) => { try { fs.unlinkSync(devPath('private/' + k)); } catch (e) { /* already gone */ } });
+  }
+}
+
+module.exports = {
+  DEV_ROOT, mode, available, readJson, writeJson, putPhoto, removePhotos,
+  privMode, privAvailable, privRead, privWrite, privList, privRemove
+};

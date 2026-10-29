@@ -138,6 +138,44 @@ dialog::backdrop{background:rgba(0,0,0,.55);backdrop-filter:blur(10px)}
   .cols{grid-template-columns:1fr}
   .head h2{font-size:32px}
 }
+
+/* tabs */
+.tabs{display:flex;gap:6px;margin-top:22px;border-bottom:1px solid var(--line-soft)}
+.tab{position:relative;padding:12px 22px;border:0;background:none;color:var(--text-faint);font-size:11px;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:color .25s}
+.tab:hover{color:var(--gold-200)}
+.tab.on{color:var(--gold-200)}
+.tab.on::after{content:"";position:absolute;left:12px;right:12px;bottom:-1px;height:2px;background:var(--grad)}
+.count{display:inline-block;min-width:20px;margin-left:6px;padding:1px 6px;border-radius:20px;background:var(--grad);color:#140E03;font-size:10px;letter-spacing:0;font-weight:500;text-align:center}
+
+/* reviews */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+.chip{padding:9px 16px;border:1px solid var(--line-soft);border-radius:30px;background:none;color:var(--text-dim);font-size:11px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;transition:all .25s}
+.chip:hover{border-color:var(--gold-600);color:var(--gold-200)}
+.chip.on{background:var(--grad);color:#140E03;border-color:transparent;font-weight:500}
+.rev{padding:22px 24px;border:1px solid var(--line-soft);border-radius:16px;background:linear-gradient(180deg,rgba(212,175,98,.06),transparent 55%),var(--ink-800)}
+.rev.st-pending{border-color:var(--line)}
+.rev .top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.chip-st{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;padding:4px 11px;border-radius:20px;border:1px solid var(--gold-700);color:var(--gold-300)}
+.chip-st.approved{background:var(--grad);color:#140E03;border-color:transparent;font-weight:500}
+.chip-st.rejected{border-color:#7a3a30;color:var(--danger)}
+.when{font-size:12.5px;color:var(--text-faint)}
+.who{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:18px;padding:12px 14px;border:1px solid var(--line-soft);border-radius:12px;background:rgba(0,0,0,.35)}
+.who .num{font:400 16px var(--sans);letter-spacing:.04em;color:var(--text)}
+.who small{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--text-faint)}
+.who .btn{margin-left:auto}
+.rev .cols{grid-template-columns:1fr auto;gap:0 20px}
+.rev .field{margin-bottom:14px}
+.starpick{display:inline-flex;gap:4px;padding-top:2px}
+.starpick button{border:0;background:none;padding:0 2px;font-size:30px;line-height:1;color:var(--ink-500);cursor:pointer;transition:color .2s,transform .2s}
+.starpick button.on{color:var(--gold-400)}
+.starpick button:hover{transform:scale(1.12)}
+.rev textarea{min-height:96px}
+.orig{margin:2px 0 16px;font-size:13px;color:var(--text-dim)}
+.orig summary{cursor:pointer;color:var(--text-faint);font-size:11px;letter-spacing:.16em;text-transform:uppercase}
+.orig div{margin-top:8px;padding:10px 12px;border-left:2px solid var(--gold-700);background:rgba(0,0,0,.3);line-height:1.6}
+.rev .acts{justify-content:flex-start;gap:10px;padding-top:6px}
+.rev .acts .gap{flex:1}
+@media(max-width:760px){.rev .cols{grid-template-columns:1fr}.who .btn{margin-left:0;width:100%}.tab{padding:12px 14px}}
 </style>
 </head>
 <body>
@@ -166,7 +204,13 @@ dialog::backdrop{background:rgba(0,0,0,.55);backdrop-filter:blur(10px)}
     </nav>
   </div></header>
 
+  <div class="wrap"><nav class="tabs" role="tablist">
+    <button class="tab on" role="tab" data-tab="watches" type="button">Watches</button>
+    <button class="tab" role="tab" data-tab="reviews" type="button">Reviews <span class="count" id="revCount" hidden>0</span></button>
+  </nav></div>
+
   <main class="wrap">
+    <div id="watchesPane">
     <div class="banner" id="seedBanner" hidden>These are the six watches built into the site. They become your own list the first time you save a change.</div>
     <div class="banner bad" id="storeBanner" hidden>Saving is not available yet: storage has not been connected to this site. Everything here works once a Blob store is linked in Vercel.</div>
 
@@ -175,6 +219,17 @@ dialog::backdrop{background:rgba(0,0,0,.55);backdrop-filter:blur(10px)}
       <button class="btn solid" id="addBtn" type="button">+ Add a Watch</button>
     </div>
     <div class="rows" id="rows"></div>
+    </div>
+
+    <div id="reviewsPane" hidden>
+      <div class="banner bad" id="revStoreBanner" hidden>Customer reviews cannot be received yet: the private storage for them has not been connected. The review form on the website will say it cannot send until it is.</div>
+      <div class="head">
+        <div><p class="eyebrow">Customer Reviews</p><h2>What <span class="gold">Customers</span> Say</h2></div>
+        <button class="btn" id="revRefresh" type="button">Refresh</button>
+      </div>
+      <div class="filters" id="revFilters"></div>
+      <div class="rows" id="revList"></div>
+    </div>
   </main>
 </div>
 
@@ -294,6 +349,7 @@ dialog::backdrop{background:rgba(0,0,0,.55);backdrop-filter:blur(10px)}
     api('GET', '/api/session').then(function (s) {
       state.maxPhotos = s.maxPhotos || 8;
       state.storage = s.storage !== false;
+      reviewStorage = s.reviewStorage !== false;
       if (!s.configured) { showLogin('', true); return; }
       if (!s.admin) { showLogin(); return; }
       return api('GET', '/api/products?all=1').then(function (d) {
@@ -304,6 +360,7 @@ dialog::backdrop{background:rgba(0,0,0,.55);backdrop-filter:blur(10px)}
         $('#seedBanner').hidden = !state.usingSeed;
         $('#storeBanner').hidden = state.storage;
         render();
+        initReviews();
       });
     }).catch(function (err) { showLogin(err.message); });
   }
@@ -596,6 +653,151 @@ dialog::backdrop{background:rgba(0,0,0,.55);backdrop-filter:blur(10px)}
       $('#editor').close();
     }).catch(function (e2) { err.textContent = e2.message; })
       .then(function () { save.disabled = false; save.textContent = 'Save Watch'; });
+  });
+
+  /* =====================================================================
+     CUSTOMER REVIEWS
+     ===================================================================== */
+  var revs = [];
+  var revFilter = 'pending';
+  var reviewStorage = true;
+  var revLoaded = false;
+
+  var STATUS_LABEL = { pending: 'Waiting', approved: 'Approved', rejected: 'Rejected' };
+  var when = function (iso) {
+    var d = new Date(iso);
+    return isNaN(d) ? '' : d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+  };
+  var pretty = function (digits) {
+    var d = String(digits);
+    return d.indexOf('92') === 0 ? '+92 ' + d.slice(2, 5) + ' ' + d.slice(5) : '+' + d;
+  };
+  var waLink = function (r) {
+    var msg = 'Hello ' + r.name + ', this is MISORAA. Thank you for taking the time to review our watches.';
+    return 'https://wa.me/' + r.whatsapp + '?text=' + encodeURIComponent(msg);
+  };
+
+  function updateWaiting() {
+    var n = revs.filter(function (r) { return r.status === 'pending'; }).length;
+    var badge = $('#revCount');
+    badge.textContent = n;
+    badge.hidden = n === 0;
+    document.title = (n ? '(' + n + ') ' : '') + 'MISORAA Admin';
+  }
+
+  function stars(n, interactive) {
+    var out = '';
+    for (var i = 1; i <= 5; i++) out += '<button type="button" data-r="star" data-v="' + i + '"' + (i <= n ? ' class="on"' : '') + ' aria-label="' + i + ' star' + (i > 1 ? 's' : '') + '">★</button>';
+    return out;
+  }
+
+  function renderReviews() {
+    updateWaiting();
+    var counts = { pending: 0, approved: 0, rejected: 0 };
+    revs.forEach(function (r) { counts[r.status] = (counts[r.status] || 0) + 1; });
+    $('#revFilters').innerHTML = [['pending', 'Waiting'], ['approved', 'Approved'], ['rejected', 'Rejected'], ['all', 'All']].map(function (f) {
+      var n = f[0] === 'all' ? revs.length : counts[f[0]] || 0;
+      return '<button type="button" class="chip' + (revFilter === f[0] ? ' on' : '') + '" data-f="' + f[0] + '">' + f[1] + ' (' + n + ')</button>';
+    }).join('');
+
+    var list = revs.filter(function (r) { return revFilter === 'all' || r.status === revFilter; });
+    var box = $('#revList');
+    if (!reviewStorage) { box.innerHTML = ''; return; }
+    if (!list.length) {
+      box.innerHTML = '<div class="empty">' + (revFilter === 'pending' ? 'No reviews are waiting. New ones from customers appear here first.' : 'Nothing here.') + '</div>';
+      return;
+    }
+    box.innerHTML = list.map(function (r) {
+      var edited = r.editedAt && r.original;
+      var acts = '';
+      if (r.status !== 'approved') acts += '<button class="btn solid small" data-r="approve">Approve &amp; Publish</button>';
+      if (r.status === 'pending') acts += '<button class="btn small danger" data-r="reject">Reject</button>';
+      if (r.status === 'approved') acts += '<button class="btn small" data-r="pending">Take Off the Website</button>';
+      if (r.status === 'rejected') acts += '<button class="btn small" data-r="pending">Move Back to Waiting</button>';
+      acts += '<button class="btn small" data-r="save">' + (r.status === 'approved' ? 'Save &amp; Update Site' : 'Save Edits') + '</button><span class="gap"></span>';
+      acts += '<button class="btn small danger" data-r="delete">Delete</button>';
+      return '<article class="rev st-' + esc(r.status) + '" data-id="' + esc(r.id) + '" data-rating="' + esc(r.rating) + '">' +
+        '<div class="top"><span class="chip-st ' + esc(r.status) + '">' + esc(STATUS_LABEL[r.status] || r.status) + '</span><span class="when">' + esc(when(r.createdAt)) + (r.editedAt ? ' · edited' : '') + '</span></div>' +
+        '<div class="who"><div><small>WhatsApp (only you see this)</small><span class="num">' + esc(pretty(r.whatsapp)) + '</span></div>' +
+          '<a class="btn small" href="' + esc(waLink(r)) + '" target="_blank" rel="noopener">Message on WhatsApp</a></div>' +
+        '<div class="cols"><label class="field"><span>Name</span><input type="text" data-k="name" maxlength="60" value="' + esc(r.name) + '"></label>' +
+          '<div class="field"><span>Stars</span><div class="starpick">' + stars(r.rating) + '</div></div></div>' +
+        '<label class="field"><span>Review</span><textarea data-k="text" maxlength="500">' + esc(r.text) + '</textarea></label>' +
+        (edited ? '<details class="orig"><summary>See the customer’s original wording</summary><div><b>' + esc(r.original.name) + '</b> · ' + esc(r.original.rating) + ' stars<br>' + esc(r.original.text) + '</div></details>' : '') +
+        '<div class="acts">' + acts + '</div></article>';
+    }).join('');
+  }
+
+  function loadReviews() {
+    if (!reviewStorage) { $('#revStoreBanner').hidden = false; renderReviews(); return Promise.resolve(); }
+    return api('GET', '/api/review-admin').then(function (d) {
+      revs = d.submissions || [];
+      revLoaded = true;
+      $('#revStoreBanner').hidden = true;
+      renderReviews();
+    }).catch(function (err) {
+      if (err.status === 503) { reviewStorage = false; $('#revStoreBanner').hidden = false; renderReviews(); }
+      else toast(err.message, true);
+    });
+  }
+
+  function initReviews() { if (!revLoaded) loadReviews(); }
+
+  function showTab(name) {
+    Array.prototype.forEach.call(document.querySelectorAll('.tab'), function (t) { t.classList.toggle('on', t.dataset.tab === name); });
+    $('#watchesPane').hidden = name !== 'watches';
+    $('#reviewsPane').hidden = name !== 'reviews';
+    if (name === 'reviews') loadReviews();
+  }
+  document.querySelector('.tabs').addEventListener('click', function (e) {
+    var t = e.target.closest('.tab');
+    if (t) showTab(t.dataset.tab);
+  });
+  $('#revRefresh').addEventListener('click', function () { loadReviews().then(function () { toast('Refreshed'); }); });
+  $('#revFilters').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-f]');
+    if (b) { revFilter = b.dataset.f; renderReviews(); }
+  });
+
+  $('#revList').addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-r]');
+    if (!btn) return;
+    var card = btn.closest('.rev');
+    var act = btn.dataset.r;
+
+    if (act === 'star') {
+      var v = parseInt(btn.dataset.v, 10);
+      card.dataset.rating = v;
+      Array.prototype.forEach.call(card.querySelectorAll('.starpick button'), function (b, i) { b.classList.toggle('on', i < v); });
+      return;
+    }
+
+    var id = card.dataset.id;
+    var sub = revs.filter(function (r) { return r.id === id; })[0];
+    if (!sub) return;
+    if (act === 'delete' && !confirm('Delete this review from ' + sub.name + ' for good?')) return;
+
+    var body = { action: act, id: id };
+    if (act !== 'delete') {
+      body.edits = {
+        name: card.querySelector('[data-k=name]').value,
+        rating: parseInt(card.dataset.rating, 10),
+        text: card.querySelector('[data-k=text]').value
+      };
+    }
+    btn.disabled = true;
+    api('POST', '/api/review-admin', body).then(function (d) {
+      if (d.deleted) revs = revs.filter(function (r) { return r.id !== id; });
+      else revs = revs.map(function (r) { return r.id === id ? d.submission : r; });
+      renderReviews();
+      toast({
+        approve: 'Published. It shows on the site in about half a minute',
+        reject: 'Rejected. It stays private',
+        pending: 'Moved back to waiting',
+        save: 'Saved',
+        delete: 'Deleted'
+      }[act]);
+    }).catch(function (err) { btn.disabled = false; toast(err.message, true); });
   });
 
   boot();

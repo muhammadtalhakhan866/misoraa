@@ -1,17 +1,17 @@
 /* ==========================================================================
    MISORAA — customer reviews
-   Renders the review grid, the rating summary and the "Drop a Review" form.
-   There is no backend yet. Until REVIEW_ENDPOINT is set, a submitted review
-   only appears for the visitor who wrote it (kept in their own browser) and
-   nothing is sent anywhere. Once set, each review is POSTed there as JSON:
-     { name, whatsapp, rating, review, submittedAt }
-   The WhatsApp number is required but is never rendered on the page.
+   Shows the built-in reviews plus the ones approved in the admin, and runs the "Drop a Review" form.
+   A submitted review is POSTed to /api/reviews as JSON:
+     { name, whatsapp, rating, review, website, t }
+   It waits in the admin until it is approved; nothing is shown on the site before that. The WhatsApp
+   number is required but is only ever seen by the admin, never rendered on the page.
+   If the service cannot be reached (for example the file opened straight from disk), the review only
+   appears for the visitor who wrote it, kept in their own browser.
    ========================================================================== */
 (function () {
   'use strict';
 
-  /* URL that accepts the POST, e.g. '/api/reviews'. Empty = browser-only. */
-  var REVIEW_ENDPOINT = '';
+  var REVIEW_ENDPOINT = '/api/reviews';
 
   var STORE_KEY = 'misoraa_my_reviews';
   var PX_PER_SEC = 60;   // marquee speed
@@ -56,7 +56,8 @@
     try {
       var raw = window.localStorage.getItem(STORE_KEY);
       var list = raw ? JSON.parse(raw) : [];
-      return Array.isArray(list) ? list : [];
+      var weekAgo = Date.now() - 7 * 24 * 3600 * 1000;
+      return Array.isArray(list) ? list.filter(function (m) { return !m.at || m.at > weekAgo; }) : [];
     } catch (e) { return []; }
   };
   var saveMine = function (list) {
@@ -164,10 +165,21 @@
     });
   };
 
+  /* Reviews approved in the admin. They arrive after the page loads and are shown ahead of the built-in ones. */
+  var approved = [];
+  var sameText = function (a, b) { return String(a).trim().toLowerCase() === String(b).trim().toLowerCase(); };
+
+  // everything the public sees, newest approved first, then the built-in reviews
+  var published = function () { return approved.concat(REVIEWS); };
+
   var render = function () {
     track.textContent = '';
-    var all = mine.map(function (r) { return { r: r, mine: true }; })
-      .concat(REVIEWS.map(function (r) { return { r: r, mine: false }; }));
+    // Once a visitor's own review has been approved it comes from the list above, so drop their local copy.
+    var pendingMine = mine.filter(function (m) {
+      return !approved.some(function (a) { return (m.id && a.id === m.id) || sameText(a.review, m.review); });
+    });
+    var all = pendingMine.map(function (r) { return { r: r, mine: true }; })
+      .concat(published().map(function (r) { return { r: r, mine: false }; }));
     [false, true].forEach(function (clone) {
       var set = el('div', 'rv-set');
       all.forEach(function (o) { set.appendChild(card(o.r, o.mine, clone)); });
@@ -178,12 +190,13 @@
 
   var renderSummary = function () {
     if (!summary) return;
-    var sum = REVIEWS.reduce(function (t, r) { return t + r.rating; }, 0);
-    var avg = (sum / REVIEWS.length).toFixed(1);
+    var list = published();
+    var sum = list.reduce(function (t, r) { return t + r.rating; }, 0);
+    var avg = (sum / list.length).toFixed(1);
     summary.textContent = '';
     summary.appendChild(el('b', 'gold-text', avg));
-    summary.appendChild(starRow(Math.round(sum / REVIEWS.length)));
-    summary.appendChild(el('small', '', 'Based on ' + REVIEWS.length + ' reviews'));
+    summary.appendChild(starRow(Math.round(sum / list.length)));
+    summary.appendChild(el('small', '', 'Based on ' + list.length + ' reviews'));
   };
 
   // Fonts change line breaks, and breakpoints change card widths: re-measure.
@@ -223,8 +236,10 @@
     return plus && /^\d{10,15}$/.test(s) ? s : '';
   };
 
+  var openedAt = 0;
   var openDialog = function () {
     setError('');
+    openedAt = Date.now();
     if (typeof dialog.showModal === 'function') dialog.showModal();
     else dialog.setAttribute('open', '');
     document.body.style.overflow = 'hidden';
@@ -276,8 +291,8 @@
     var rating = parseInt(picked.value, 10);
 
     // The number is deliberately left out of what is kept and shown locally.
-    var finish = function () {
-      mine.unshift({ name: name, rating: rating, review: text });
+    var finish = function (id) {
+      mine.unshift({ id: id || '', name: name, rating: rating, review: text, at: Date.now() });
       saveMine(mine);
       render();
       resetForm();
@@ -296,18 +311,36 @@
         whatsapp: phone,
         rating: rating,
         review: text,
-        submittedAt: new Date().toISOString()
+        website: ($('#rvWebsite') || {}).value || '',   // a hidden field only bots fill in
+        t: Date.now() - openedAt
       })
     }).then(function (res) {
-      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json().catch(function () { return {}; }).then(function (data) {
+        if (!res.ok) throw new Error(data.error || 'Sorry, we could not send your review. Please try again.');
+        submitBtn.disabled = false;
+        finish(data.id);
+      });
+    }).catch(function (e) {
       submitBtn.disabled = false;
-      finish();
-    }).catch(function () {
-      submitBtn.disabled = false;
-      setError('Sorry, we could not send your review. Please try again.');
+      setError(e && e.message ? e.message : 'Sorry, we could not send your review. Please try again.');
     });
   });
 
   renderSummary();
   render();
+
+  if (window.fetch && location.protocol !== 'file:') {
+    var gotIt = false;
+    var timer = setTimeout(function () { gotIt = true; }, 3000);   // a slow service never holds the page up
+    fetch(REVIEW_ENDPOINT, { headers: { Accept: 'application/json' } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        clearTimeout(timer);
+        if (!d || !Array.isArray(d.reviews) || !d.reviews.length) return;
+        approved = d.reviews.map(function (x) { return { id: x.id, name: x.name, rating: x.rating, review: x.text }; });
+        renderSummary();
+        render();
+      })
+      .catch(function () { clearTimeout(timer); });
+  }
 })();
