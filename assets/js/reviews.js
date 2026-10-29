@@ -14,7 +14,7 @@
   var REVIEW_ENDPOINT = '';
 
   var STORE_KEY = 'misoraa_my_reviews';
-  var COLLAPSED_COUNT = 6;
+  var PX_PER_SEC = 60;   // marquee speed
 
   var REVIEWS = [
     { name: 'Muhammad Talha Khan', rating: 5, review: 'The watch looks even better in person. The finishing is clean and the overall design gives a premium feel. Definitely worth the price.' },
@@ -41,15 +41,15 @@
 
   var $ = function (s, c) { return (c || document).querySelector(s); };
 
-  var grid = $('#reviewGrid');
-  if (!grid) return;
+  var marquee = $('#reviewMarquee');
+  var track   = $('#reviewTrack');
+  if (!marquee || !track) return;
 
-  var moreBtn  = $('#moreReviews');
-  var openBtn  = $('#openReview');
-  var dialog   = $('#reviewDialog');
-  var form     = $('#reviewForm');
-  var summary  = $('#ratingSum');
-  var expanded = false;
+  var openBtn = $('#openReview');
+  var dialog  = $('#reviewDialog');
+  var form    = $('#reviewForm');
+  var summary = $('#ratingSum');
+  var readDlg = $('#readDialog');
 
   /* ---------- Storage (every access guarded: private mode can throw) ---------- */
   var loadMine = function () {
@@ -77,37 +77,98 @@
     row.setAttribute('role', 'img');
     row.setAttribute('aria-label', rating + ' out of 5 stars');
     for (var i = 1; i <= 5; i++) {
-      row.appendChild(el('span', i <= rating ? '' : 'off', '★'));
+      row.appendChild(el('span', i <= rating ? '' : 'off', '\u2605'));
     }
     return row;
   };
 
-  var card = function (r, isMine) {
+  var tagFor = function (isMine) { return isMine ? 'Your review \u00B7 pending' : 'Customer review'; };
+
+  /* ---------- Full-review popup ---------- */
+  var setLock = function (locked) { document.body.style.overflow = locked ? 'hidden' : ''; };
+
+  var openRead = function (r, isMine) {
+    if (!readDlg) return;
+    var holder = $('#rdStars');
+    holder.textContent = '';
+    holder.appendChild(starRow(r.rating));
+    $('#rdText').textContent = '\u201C' + r.review + '\u201D';
+    $('#rdAvatar').textContent = r.name.charAt(0).toUpperCase();
+    $('#rdName').textContent = r.name;
+    $('#rdTag').textContent = tagFor(isMine);
+
+    marquee.classList.add('is-paused');
+    if (typeof readDlg.showModal === 'function') readDlg.showModal();
+    else readDlg.setAttribute('open', '');
+    setLock(true);
+  };
+
+  var closeRead = function () {
+    if (typeof readDlg.close === 'function' && readDlg.open) readDlg.close();
+    else readDlg.removeAttribute('open');
+    marquee.classList.remove('is-paused');
+    setLock(false);
+  };
+
+  if (readDlg) {
+    $('#rdClose').addEventListener('click', closeRead);
+    readDlg.addEventListener('click', function (e) { if (e.target === readDlg) closeRead(); });
+    readDlg.addEventListener('close', function () { marquee.classList.remove('is-paused'); setLock(false); });
+  }
+
+  /* ---------- Cards ---------- */
+  // clone = the second copy that makes the loop seamless: clickable, but kept
+  // out of the keyboard order and the accessibility tree.
+  var card = function (r, isMine, clone) {
     var c = el('div', 'quote');
     c.appendChild(starRow(r.rating));
-    c.appendChild(el('p', '', '“' + r.review + '”'));
+    c.appendChild(el('p', 'quote-text', '\u201C' + r.review + '\u201D'));
+    c.appendChild(el('span', 'rv-more', 'Read full review'));
     var by = el('div', 'quote-by');
     by.appendChild(el('div', 'avatar', r.name.charAt(0).toUpperCase()));
     var who = el('div');
     who.appendChild(el('b', '', r.name));
-    who.appendChild(el('span', '', isMine ? 'Your review · pending' : 'Customer review'));
+    who.appendChild(el('span', '', tagFor(isMine)));
     by.appendChild(who);
     c.appendChild(by);
+
+    var open = function () { openRead(r, isMine); };
+    c.addEventListener('click', open);
+    if (clone) {
+      c.setAttribute('aria-hidden', 'true');
+    } else {
+      c.tabIndex = 0;
+      c.setAttribute('role', 'button');
+      c.setAttribute('aria-label', 'Read the full review by ' + r.name);
+      c.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); }
+      });
+    }
     return c;
   };
 
+  // Flag cards whose text is cut off, and size the loop so speed stays constant.
+  var fit = function () {
+    var sets = track.children;
+    if (!sets.length) return;
+    var w = sets[0].getBoundingClientRect().width;
+    if (w > 0) track.style.setProperty('--rv-duration', Math.max(30, w / PX_PER_SEC).toFixed(1) + 's');
+    Array.prototype.forEach.call(track.querySelectorAll('.quote'), function (c) {
+      var t = c.querySelector('.quote-text');
+      c.classList.toggle('is-clamped', t.scrollHeight > t.clientHeight + 1);
+    });
+  };
+
   var render = function () {
-    grid.textContent = '';
+    track.textContent = '';
     var all = mine.map(function (r) { return { r: r, mine: true }; })
       .concat(REVIEWS.map(function (r) { return { r: r, mine: false }; }));
-    var limit = expanded ? all.length : COLLAPSED_COUNT + mine.length;
-    all.slice(0, limit).forEach(function (o) { grid.appendChild(card(o.r, o.mine)); });
-
-    if (moreBtn) {
-      var hidden = all.length - limit;
-      moreBtn.hidden = hidden <= 0 && !expanded;
-      moreBtn.textContent = expanded ? 'Show fewer reviews' : 'Show all ' + all.length + ' reviews';
-    }
+    [false, true].forEach(function (clone) {
+      var set = el('div', 'rv-set');
+      all.forEach(function (o) { set.appendChild(card(o.r, o.mine, clone)); });
+      track.appendChild(set);
+    });
+    fit();
   };
 
   var renderSummary = function () {
@@ -120,9 +181,13 @@
     summary.appendChild(el('small', '', 'Based on ' + REVIEWS.length + ' reviews'));
   };
 
-  if (moreBtn) {
-    moreBtn.addEventListener('click', function () { expanded = !expanded; render(); });
-  }
+  // Fonts change line breaks, and breakpoints change card widths: re-measure.
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(fit, 150);
+  });
 
   /* ---------- Dialog ---------- */
   if (!dialog || !form || !openBtn) { renderSummary(); render(); return; }
@@ -209,11 +274,10 @@
     var finish = function () {
       mine.unshift({ name: name, rating: rating, review: text });
       saveMine(mine);
-      expanded = false;
       render();
       resetForm();
       closeDialog();
-      grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      marquee.scrollIntoView({ behavior: 'smooth', block: 'center' });
     };
 
     if (!REVIEW_ENDPOINT) { finish(); return; }

@@ -320,10 +320,11 @@
       <div class="rating-sum" id="ratingSum"></div>
     </div>
 
-    <div class="quotes" id="reviewGrid" aria-live="polite"></div>
+    <div class="rv-marquee" id="reviewMarquee" role="region" aria-label="Customer reviews">
+      <div class="rv-track" id="reviewTrack"></div>
+    </div>
 
     <div class="reviews-actions reveal">
-      <button class="link-arrow" id="moreReviews" type="button">Show all reviews</button>
       <button class="btn-review" id="openReview" type="button"><span>Drop a Review</span></button>
     </div>
   </div>
@@ -403,6 +404,19 @@
     </div>
   </div>
 </footer>
+
+<dialog class="rv-dialog rv-read" id="readDialog" aria-labelledby="rdName">
+  <div class="rv-read-body">
+    <button type="button" class="rv-close" id="rdClose" aria-label="Close">&times;</button>
+    <p class="eyebrow">Customer Review</p>
+    <div id="rdStars"></div>
+    <p class="rd-text" id="rdText"></p>
+    <div class="quote-by">
+      <div class="avatar" id="rdAvatar"></div>
+      <div><b id="rdName"></b><span id="rdTag"></span></div>
+    </div>
+  </div>
+</dialog>
 
 <dialog class="rv-dialog" id="reviewDialog" aria-labelledby="rvTitle">
   <form id="reviewForm" novalidate>

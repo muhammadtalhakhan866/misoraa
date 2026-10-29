@@ -461,7 +461,7 @@ h1,h2,h3,h4{font-family:var(--serif);font-weight:300;line-height:1.1;margin:0;le
 /* ---------- Footer ---------- */
 .footer{background:var(--ink-850);border-top:1px solid var(--line-soft);padding:90px 0 0}
 .footer-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:60px;padding-bottom:70px}
-.footer-brand svg{height:70px;width:auto;margin-bottom:24px}
+.footer-brand > svg{height:70px;width:auto;margin-bottom:24px}
 .footer-brand p{color:var(--text-dim);font-size:14px;max-width:300px;line-height:1.9;margin:0 0 26px}
 .socials{display:flex;gap:12px}
 .socials a{
@@ -680,4 +680,128 @@ button.link-arrow:hover{border-bottom-color:var(--gold-500)}
 @media(max-width:780px){
   .wa-float{right:16px;bottom:18px;width:54px;height:54px}
   .toast{left:22px;right:22px;bottom:86px}
+}
+
+/* ==========================================================================
+   REVIEW MARQUEE — one line of reviews, running right to left
+   ========================================================================== */
+.rv-marquee{
+  position:relative;overflow:hidden;padding:8px 0;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)
+}
+.rv-track{
+  display:flex;width:max-content;will-change:transform;
+  animation:rv-scroll var(--rv-duration,120s) linear infinite
+}
+.rv-set{display:flex;flex:none}
+/* moving left by exactly one set lands the second set where the first began */
+@keyframes rv-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.rv-marquee:hover .rv-track,
+.rv-marquee:focus-within .rv-track,
+.rv-marquee.is-paused .rv-track{animation-play-state:paused}
+
+.rv-track .quote{
+  position:relative;flex:none;width:350px;margin-right:24px;
+  padding:30px 28px 26px;cursor:pointer;
+  transition:border-color .4s var(--ease),background .4s var(--ease)
+}
+.rv-track .quote:hover,.rv-track .quote:focus-visible{border-color:var(--gold-600);background:var(--ink-700);outline:none}
+.rv-track .quote .stars{margin-bottom:18px}
+.rv-track .quote-text{
+  margin:0 0 22px;font-size:18px;min-height:90px;overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden
+}
+.rv-more{
+  display:none;position:absolute;right:28px;bottom:32px;
+  font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-400)
+}
+.rv-track .quote.is-clamped .rv-more{display:block}
+
+/* Full-review popup */
+.rv-read{max-width:580px}
+.rv-read-body{position:relative;padding:50px 46px 40px}
+.rv-read .stars{justify-content:flex-start;font-size:16px;margin:6px 0 4px}
+.rd-text{
+  margin:20px 0 32px;font-family:var(--serif);font-style:italic;font-size:23px;line-height:1.7;
+  color:var(--text);overflow-wrap:anywhere
+}
+
+/* Without motion, let people scroll the row themselves instead */
+@media(prefers-reduced-motion:reduce){
+  .rv-marquee{overflow-x:auto}
+  .rv-track{animation:none}
+  .rv-set + .rv-set{display:none}
+}
+@media(max-width:780px){
+  .rv-track .quote{width:290px;margin-right:16px;padding:26px 22px 22px}
+  .rv-more{right:22px;bottom:26px}
+  .rv-read-body{padding:46px 26px 30px}
+  .rd-text{font-size:20px}
+}
+
+/* ==========================================================================
+   GOLD ATMOSPHERE — a soft golden gradient layered over the black
+   Kept low-alpha on purpose: it should lift the page, not tint the text.
+   ========================================================================== */
+
+/* 1. Ambient glow fixed to the viewport, so the gold drifts as you scroll */
+body::before{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 48% at 92% 6%,rgba(212,175,98,.14),transparent 70%),
+    radial-gradient(ellipse 55% 46% at 4% 52%,rgba(162,120,47,.11),transparent 70%),
+    radial-gradient(ellipse 70% 40% at 62% 104%,rgba(212,175,98,.12),transparent 70%)
+}
+
+/* 2. Each section carries its own wash, alternating sides down the page */
+.section{isolation:isolate}
+.section::before{
+  content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(ellipse 52% 46% at 100% 18%,rgba(212,175,98,.13),transparent 68%),
+    radial-gradient(ellipse 44% 40% at 0% 88%,rgba(162,120,47,.10),transparent 68%)
+}
+.section:nth-of-type(even)::before{
+  background:
+    radial-gradient(ellipse 52% 46% at 0% 16%,rgba(212,175,98,.13),transparent 68%),
+    radial-gradient(ellipse 44% 40% at 100% 86%,rgba(162,120,47,.10),transparent 68%)
+}
+
+/* 3. Surfaces pick up a gold sheen along their top edge */
+.card{
+  background:
+    linear-gradient(180deg,rgba(212,175,98,.08),transparent 36%),
+    linear-gradient(180deg,var(--ink-700),var(--ink-850));
+  box-shadow:inset 0 1px 0 rgba(251,243,218,.10)
+}
+.quote{
+  background:linear-gradient(165deg,rgba(212,175,98,.08),transparent 48%),var(--ink-850);
+  box-shadow:inset 0 1px 0 rgba(251,243,218,.10)
+}
+.pillar{background:linear-gradient(180deg,rgba(212,175,98,.07),transparent 58%),var(--ink-900)}
+.pillar:hover{background:linear-gradient(180deg,rgba(212,175,98,.13),transparent 66%),var(--ink-700)}
+.member{background:linear-gradient(180deg,rgba(212,175,98,.07),transparent 40%),var(--ink-850)}
+.figure{background:linear-gradient(180deg,rgba(212,175,98,.08),transparent 70%),var(--ink-900)}
+
+/* 4. Newsletter and footer get a gold light from above, and a gold hairline */
+.news{
+  background:radial-gradient(ellipse 60% 70% at 50% 0%,rgba(212,175,98,.16),transparent 72%)
+}
+.footer{
+  background:radial-gradient(ellipse 65% 90% at 50% 0%,rgba(212,175,98,.12),transparent 72%),var(--ink-850);
+  border-top:0;position:relative
+}
+.footer::before{
+  content:"";position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold-700) 20%,var(--gold-300) 50%,var(--gold-700) 80%,transparent)
+}
+
+@media(max-width:780px){
+  body::before{
+    background:
+      radial-gradient(ellipse 90% 40% at 100% 4%,rgba(212,175,98,.15),transparent 70%),
+      radial-gradient(ellipse 80% 38% at 0% 60%,rgba(162,120,47,.11),transparent 70%),
+      radial-gradient(ellipse 100% 34% at 50% 104%,rgba(212,175,98,.12),transparent 70%)
+  }
 }
